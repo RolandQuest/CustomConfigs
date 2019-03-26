@@ -9,14 +9,17 @@
 #include "cc/cc_loader.h"
 #include "cc/cc_factory.h"
 
+//Testing...
+#include "acc/cclog.h"
+
 namespace cc
 {
-    //Private members.
+    //Member variables
+    
     ConfigurationMap _ConfigMap;
     ComponentMap _CompMap;
     cc_loader* _Loader;
     std::vector<cc_factory*> _FactoryVector;
-    
     
     
     //Private functions.
@@ -128,7 +131,7 @@ namespace cc
     
     
     
-        //Public functions.
+    //Public functions.
     
     void clearMap()
     {
