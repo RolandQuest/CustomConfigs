@@ -27,7 +27,7 @@ namespace cc
     cc_loader* setLoader(cc_loader* loader);
     cc_factory* registerFactory(cc_factory* factory);
     void clearMap();
-    
+    void setCCLogFileBuf(std::filebuf* fileBuf);
     
     //Template functions
     template<typename Comp>

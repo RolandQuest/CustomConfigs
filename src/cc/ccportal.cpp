@@ -3,19 +3,18 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <fstream>
 
 #include "cc/cc_component_configuration.h"
 #include "cc/cc_component.h"
 #include "cc/cc_loader.h"
 #include "cc/cc_factory.h"
-
-//Testing...
 #include "acc/cclog.h"
 
 namespace cc
 {
-    //Member variables
     
+    //Member variables
     ConfigurationMap _ConfigMap;
     ComponentMap _CompMap;
     cc_loader* _Loader;
@@ -132,6 +131,11 @@ namespace cc
     
     
     //Public functions.
+    
+    void setCCLogFileBuf(std::filebuf* fileBuf)
+    {
+        _TargetFileBuffer = fileBuf;
+    }
     
     void clearMap()
     {

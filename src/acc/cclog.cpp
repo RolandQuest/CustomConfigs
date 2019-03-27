@@ -1,19 +1,10 @@
 #include "acc/cclog.h"
 
-#include <ostream>
-#include <fstream>
-#include <iostream>
-
 namespace cc
 {
+
+    //TODO: This requires that the clog streambuf hasn't been altered already.
+    std::filebuf* _TargetFileBuffer;
+    std::streambuf* _OriginalClogBuffer;
     
-    void useBufferOfStream(const std::ofstream* stream)
-    {
-        std::clog.rdbuf((*stream).rdbuf());
-    }
-    
-    void setLogStream(std::ostream& stream)
-    {
-        
-    }
 }
