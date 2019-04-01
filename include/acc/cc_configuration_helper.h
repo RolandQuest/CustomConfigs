@@ -5,6 +5,10 @@
 #include <vector>
 #include <sstream>
 
+
+//TEST
+#include <iostream>
+
 namespace cc
 {
     
@@ -30,13 +34,13 @@ namespace cc
     {
         std::istringstream iss;
         iss.str(configuration);
+        iss.clear();
         
         std::vector<Number> ret;
+        Number value;
         
-        while(!(iss>>std::ws).eof())
+        while(iss>>value)
         {
-            Number value;
-            iss>>value;
             ret.push_back(value);
         }
         

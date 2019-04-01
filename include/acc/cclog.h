@@ -25,16 +25,11 @@ namespace cc
     template<typename ...Rest>
     void Log(Rest... params)
     {
-        
-        
-        
-        
-        if(_TargetFileBuffer->is_open())
+        if(_TargetFileBuffer != nullptr && _TargetFileBuffer->is_open())
         {
             std::clog.rdbuf(_TargetFileBuffer);
         }
         
-        //std::clog.rdbuf(_TargetBuffer);
         LogIterator(params...);
         std::clog.rdbuf(_OriginalClogBuffer);
     }

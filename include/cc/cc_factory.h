@@ -14,9 +14,9 @@ namespace cc
             
             virtual ~cc_factory() = default;
             
-            virtual std::vector<std::string> GetAvailableTypes() = 0;
-            virtual bool ContainsType(std::string type) = 0;
-            virtual cc_component_configuration* CreateConfiguration(const std::string& type, const std::string& name, const std::string& contents) = 0;
+            virtual std::vector<std::string> GetAvailableTypes() const = 0;
+            virtual bool ContainsType(std::string type) const = 0;
+            virtual cc_component_configuration* CreateConfiguration(const std::string& type, const std::string& name, const std::string& contents) const = 0;
             
     };
 

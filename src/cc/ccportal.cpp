@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <typeinfo>
 
 #include "cc/cc_component_configuration.h"
 #include "cc/cc_component.h"
@@ -17,7 +18,7 @@ namespace cc
     //Member variables
     ConfigurationMap _ConfigMap;
     ComponentMap _CompMap;
-    cc_loader* _Loader;
+    cc_loader* _Loader = nullptr;
     std::vector<cc_factory*> _FactoryVector;
     
     
@@ -31,6 +32,12 @@ namespace cc
         {
             _CompMap[item.first] = (item.second)->Instantiate();
         }
+        
+        if(isSuccess)
+        {
+            Log("Instantiation successful!");
+        }
+        
         return isSuccess;
     }
     
@@ -40,8 +47,20 @@ namespace cc
         for(auto& entry : _CompMap)
         {
             //TODO: Pass through as constant.
-            isSuccess &= (entry.second)->Link(_CompMap);
+            bool localIsSuccess = (entry.second)->Link(_CompMap);
+            isSuccess &= localIsSuccess;
+            
+            if(!localIsSuccess)
+            {
+                Log("Linking issue with component '", entry.first, "'.");
+            }
         }
+        
+        if(isSuccess)
+        {
+            Log("Linking successful!");
+        }
+        
         return isSuccess;
     }
     
@@ -50,8 +69,20 @@ namespace cc
         bool isSuccess = true;
         for(auto& entry : _ConfigMap)
         {
-            isSuccess &= (entry.second)->Validate();
+            bool localIsSuccess = (entry.second)->Validate();
+            isSuccess &= localIsSuccess;
+            
+            if(!localIsSuccess)
+            {
+                Log("Component '",entry.first,"' validation failed!");
+            }
         }
+        
+        if(isSuccess)
+        {
+            Log("Validation successful!");
+        }
+        
         return isSuccess;
     }
     
@@ -125,7 +156,22 @@ namespace cc
             FindAllCirclesInvolving(currentPath, possibleNodes, copyOfAvailableConfigurations, circles);
         }
         
-        return !( (bool) circles.size() );
+        bool isSuccess = !( (bool) circles.size() );
+        
+        if(isSuccess)
+        {
+            Log("Circular reference check successful.");
+        }
+        else
+        {
+            Log("Circular references found!");
+            for(auto& circle : circles)
+            {
+                Log('\t', circle);
+            }
+        }
+        
+        return isSuccess;
     }
     
     
@@ -149,25 +195,55 @@ namespace cc
             delete entry.second;
         }
         _CompMap.clear();
+        
+        Log("Clear called on all maps.");
     }
     
     cc_loader* setLoader(cc_loader* loader)
     {
         _Loader = loader;
+        Log("Loader set of type: ", typeid(&loader).name());
         return _Loader;
     }
     
     cc_factory* registerFactory(cc_factory* factory)
     {
         _FactoryVector.push_back(factory);
+        Log("Factory registered of type: ", typeid(&factory).name());
         return factory;
+    }
+    
+    bool GoodRegistry(const std::string& configFile)
+    {
+        bool isSuccess = true;
+        if(_FactoryVector.size() == 0)
+        {
+            Log("No factories registered when loading ", configFile);
+            isSuccess = false;
+        }
+        if(_Loader == nullptr)
+        {
+           Log("No loader set when loading ", configFile);
+           isSuccess = false;
+        }
+        return isSuccess;
     }
     
     bool load(const std::string& configFile)
     {
+        if(!GoodRegistry(configFile))
+        {
+            return false;
+        }
+
         bool isSuccess = true;
-        
         isSuccess &= _Loader->Load(configFile, _ConfigMap, _FactoryVector);
+        
+        if(isSuccess)
+        {
+            Log("Loading successful!");
+        }
+        
         isSuccess &= validate();
         isSuccess &= instantiate();
         isSuccess &= link();
@@ -175,6 +251,5 @@ namespace cc
         
         return isSuccess;
     }
-    
 }
 

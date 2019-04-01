@@ -17,9 +17,9 @@ namespace cc
             cc_core_factory();
             virtual ~cc_core_factory();
             
-            std::vector<std::string> GetAvailableTypes() override;
-            bool ContainsType(std::string type) override;
-            cc_component_configuration* CreateConfiguration(const std::string& type, const std::string& name, const std::string& contents) override;
+            std::vector<std::string> GetAvailableTypes() const override;
+            bool ContainsType(std::string type) const override;
+            cc_component_configuration* CreateConfiguration(const std::string& type, const std::string& name, const std::string& contents) const override;
             
         private:
             
