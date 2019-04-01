@@ -1,9 +1,7 @@
 #include "core/cc_core_loader.h"
 
-#include <algorithm>
 #include <sstream>
 
-#include "cc/cc_component_configuration.h"
 #include "cc/cc_factory.h"
 
 namespace cc
@@ -21,111 +19,180 @@ namespace cc
     
     bool cc_core_loader::Load(const std::string& configFile, ConfigurationMap& theMap, const std::vector<cc_factory*>& availableFactories)
     {
-        _FileName = configFile;
-        OpenFile();
-        
-        str_ConfigData configData;
-        
-        LineState
-            currentState = BeginFile,
-            previousState = BeginFile;
-            
-        while(NextLine())
+        if(!LoadFile(configFile))
         {
-            SetState(currentState, previousState);
-            switch(currentState)
-            {
-                case BeginFile:
-                    break;
-                    
-                case NewConfiguration:
-                    
-                    if(previousState != BeginFile)
-                    {
-                        if(configData.IsValid())
-                        {
-                            FactoryWork(theMap, availableFactories, configData);
-                        }
-                    }
-                    
-                    ReadConfigurationLine(configData);
-                    break;
-                
-                case ReadingConfiguration:
-                    configData.Contents += _LineBeingRead + '\n';
-                    break;
-                    
-            }
+            return false;
         }
         
-        if(previousState !=  BeginFile)
-        {
-            FactoryWork(theMap, availableFactories, configData);
-        }
-        
-        CloseFile();
-        
-        //TODO: No errors recorded yet.
+        _Root = new context_node();
+        CreateContextTree(_Root);
+        CreateConfigurations(_Root, theMap, availableFactories);
         return true;
     }
     
-    void cc_core_loader::SetState(LineState& currentState, LineState& previousState)
+    std::vector<std::string> cc_core_loader::CreateConfigurations(context_node* parent, ConfigurationMap& theMap, const std::vector<cc_factory*>& availableFactories)
     {
-        previousState = currentState;
-        if(LineContainsConfigurationBanner())
+        for(auto& child : parent->_Children)
         {
-            currentState = NewConfiguration;
+            std::vector<std::string> childNames = CreateConfigurations(child.second, theMap, availableFactories);
+            std::string expandedNames;
+            
+            for(auto& name : childNames)
+            {
+                expandedNames += " " + name + " ";
+            }
+            
+            parent->ReplaceName(child.first, expandedNames);
         }
-        else if(currentState == NewConfiguration)
+        
+        std::vector<config_string> splitConfigs;
+        SplitConfigs(parent->_NodeContents, splitConfigs);
+        
+        std::vector<std::string> allNames;
+        for(const config_string& config : splitConfigs)
         {
-            currentState = ReadingConfiguration;
+            std::string name = CreateComponent(theMap, availableFactories, config);
+            allNames.push_back(name);
+        }
+        
+        return allNames;
+    }
+    
+    void cc_core_loader::SplitConfigs(const config_string& config, std::vector<config_string>& container)
+    {
+        size_t
+            endPos = 0,
+            pos = config.Find(_ConfigurationBanner);
+        
+        while(pos != std::string::npos)
+        {
+            endPos = config.Find(_ConfigurationBanner, pos + 1);
+            config_string localConfig = config.SubStr(pos + 1, endPos - pos - 1);
+            container.push_back(localConfig);
+            pos = config.Find(_ConfigurationBanner, pos + 1);;
         }
     }
     
-    void cc_core_loader::FactoryWork(ConfigurationMap& myMap, const std::vector<cc_factory*>& availableFactories, const str_ConfigData& configData)
+    std::string cc_core_loader::CreateComponent(ConfigurationMap& theMap, const std::vector<cc_factory*>& availableFactories, const config_string& config)
     {
+        std::string
+            type,
+            name,
+            contents;
+            
+        std::istringstream stream;
+        stream.str(config.GetDataCopy());
+        stream.clear();
+        
+        stream>>type>>name;
+        
+        while(!stream.eof())
+        {
+            contents += stream.get();
+        }
+        
+        //TODO: Check valid config first please.
+        
         for(size_t i = 0; i < availableFactories.size(); i++)
         {
-            if(availableFactories[i]->ContainsType(configData.Type))
+            if(availableFactories[i]->ContainsType(type))
             {
-                cc_component_configuration* config = availableFactories[i]->CreateConfiguration(configData.Type, configData.Name, configData.Contents);
-                myMap[configData.Name] = config;
+                cc_component_configuration* config = availableFactories[i]->CreateConfiguration(type, name, contents);
+                theMap[name] = config;
                 break;
             }
         }
+        
+        return name;
     }
     
-    bool cc_core_loader::LineContainsConfigurationBanner()
+    void cc_core_loader::CreateContextTree(context_node* parent)
     {
-        size_t pos = _LineBeingRead.find(_ConfigurationBanner);
-        if(pos != std::string::npos)
+        size_t lineNumber = parent->_ReferenceLineNumber;
+        std::streampos pos = parent->_ReferencePos;
+        
+        int subContextCounter = 0;
+        
+        std::string fullLineContents;
+        while(_FileContents.GetLineAt(fullLineContents, lineNumber, pos))
         {
-            return true;
+            std::istringstream stream;
+            stream.str(fullLineContents);
+            stream.clear();
+            
+            std::string abreviatedLineContents;
+            
+            while(!stream.eof())
+            {
+                char nextChar = stream.get();
+                
+                switch(nextChar)
+                {
+                    case _ContextOpen:
+                        
+                        if(subContextCounter == 0)
+                        {
+                            std::string childName = GetUniqueName();
+                            abreviatedLineContents += " " + childName + " ";
+                            context_node* child = new context_node(parent, lineNumber, pos + stream.tellg());
+                            CreateContextTree(child);
+                            parent->_Children[childName] = child;
+                        }
+                        
+                        subContextCounter++;
+                        break;
+                        
+                    case _ContextClose:
+                        
+                        if(subContextCounter > 0)
+                        {
+                            subContextCounter--;
+                        }
+                        else
+                        {
+                            if(parent->IsRoot())
+                            {
+                                //What are you closing now?
+                            }
+                            else
+                            {
+                                parent->_NodeContents += abreviatedLineContents;
+                                return;
+                            }
+                        }
+                        
+                        break;
+                    
+                    default:
+                        
+                        if(subContextCounter == 0)
+                        {
+                            abreviatedLineContents.push_back(nextChar);
+                        }
+                        break;
+                }
+            }
+            
+            parent->_NodeContents += abreviatedLineContents + '\n';
+            pos = 0;
+            lineNumber++;
         }
-        return false;
     }
     
-    void cc_core_loader::ReadConfigurationLine(str_ConfigData& configData)
+    std::string cc_core_loader::GetUniqueName()
     {
-        configData.Clear();
+        bool success = false;
+        std::string testName;
         
-        size_t pos = _LineBeingRead.find(_ConfigurationBanner);
-        _LineBuffer.str(_LineBeingRead.substr(pos+_ConfigurationBanner.size(),std::string::npos));
-        _LineBuffer.clear();
-        
-        _LineBuffer>>std::ws;
-        _LineBuffer>>configData.Type;
-        
-        _LineBuffer>>std::ws;
-        _LineBuffer>>configData.Name;
-        
-        //TODO: Log error if invalid str_ConfigData.
-        
-        if(!(_LineBuffer>>std::ws).eof())
+        while(!success)
         {
-            _LineBuffer>>configData.Contents;
-            configData.Contents += '\n';
+            _UniqueNameIncrement++;
+            testName = _UniqueNameHeader + std::to_string(_UniqueNameIncrement);
+            success = _FileContents.Find(testName) == std::string::npos;
         }
+        
+        return testName;
     }
+    
     
 }

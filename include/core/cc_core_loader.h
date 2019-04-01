@@ -7,26 +7,10 @@
 
 #include "cc/cc_loader.h"
 #include "acc/cc_base_loader.h"
+#include "core/context_node.h"
 
 namespace cc
 {
-    struct str_ConfigData
-    {
-        std::string Type = "";
-        std::string Name = "";
-        std::string Contents = "";
-        
-        bool IsValid()
-        {
-            return Type != "" && Name != "";
-        }
-        void Clear()
-        {
-            Type = "";
-            Name = "";
-            Contents = "";
-        }
-    };
     
     class cc_component_configuration;
     class cc_factory;
@@ -43,19 +27,46 @@ namespace cc
             
         private:
             
-            enum LineState
+            std::vector<std::string> CreateConfigurations(context_node* parent, ConfigurationMap& theMap, const std::vector<cc_factory*>& availableFactories);
+            void CreateContextTree(context_node* parent);
+            std::string GetUniqueName();
+            
+            void LoadContents(context_node* node, std::vector<std::string>& compNames);
+            void ExtractComponents(context_node* node, std::vector<config_string>& allComponents);
+            void CreateComponents(const std::vector<config_string>& allConfigStrings, std::vector<std::string>& compNames);
+            void SplitConfigs(const config_string& config, std::vector<config_string>& container);
+            
+            std::string CreateComponent(ConfigurationMap& theMap, const std::vector<cc_factory*>& availableFactories, const config_string& config);
+            
+            void PrintContexts(std::string name, context_node* parent);
+            
+            
+            context_node* _Root;
+            
+            static constexpr char _ConfigurationBanner = '#';
+            static constexpr char _ContextOpen = '{';
+            static constexpr char _ContextClose = '}';
+            
+            const std::string _UniqueNameHeader = "cc_core_loader_unique_";
+            int _UniqueNameIncrement = -1;
+            
+            /*
+            enum ReadState
             {
-                BeginFile = 0,
-                NewConfiguration,
+                NewConfiguration = 0,
                 ReadingConfiguration
             };
             
-            void SetState(LineState& currentState, LineState& previousState);
+            void SetState(ReadState& currentState, ReadState& previousState);
             void FactoryWork(ConfigurationMap& myMap, const std::vector<cc_factory*>& availableFactories, const str_ConfigData& configData);
             bool LineContainsConfigurationBanner();
             void ReadConfigurationLine(str_ConfigData& configData);
             
-            const std::string _ConfigurationBanner = "#";
+            //TODO: AssignContents() does not allow these to have size > 1.
+            
+            
+            int _SubConfigLevel;
+            */
     };
 
 }

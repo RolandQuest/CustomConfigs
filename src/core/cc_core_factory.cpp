@@ -19,12 +19,12 @@ namespace cc
         //dtor
     }
     
-    std::vector<std::string> cc_core_factory::GetAvailableTypes()
+    std::vector<std::string> cc_core_factory::GetAvailableTypes() const
     {
         return Types;
     }
     
-    bool cc_core_factory::ContainsType(std::string type)
+    bool cc_core_factory::ContainsType(std::string type) const
     {
         std::transform(std::begin(type),std::end(type),std::begin(type),::tolower);
         for(size_t i = 0; i < Types.size(); i++)
@@ -37,7 +37,7 @@ namespace cc
         return false;
     }
     
-    cc_component_configuration* cc_core_factory::CreateConfiguration(const std::string& type, const std::string& name, const std::string& contents)
+    cc_component_configuration* cc_core_factory::CreateConfiguration(const std::string& type, const std::string& name, const std::string& contents) const
     {
         //TODO: Change RNG to proper config.
         if(type == Types[DISTRIBUTION]) { return new cc_distribution_config(name, contents); }

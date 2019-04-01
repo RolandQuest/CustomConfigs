@@ -2,8 +2,9 @@
 #define CC_BASE_LOADER_H
 
 #include <string>
-#include <fstream>
-#include <sstream>
+#include <vector>
+
+#include "core/config_string.h"
 
 namespace cc
 {
@@ -15,20 +16,23 @@ namespace cc
             virtual ~cc_base_loader();
             
         protected:
-                
-                bool OpenFile();
-                void CloseFile();
-                bool NextLine();
-                void DestroyLineComment();
-                
-                int _LineNumber;
-                std::istringstream _LineBuffer;
-                std::ifstream _InputStream;
-                std::string _LineBeingRead;
-                std::string _FileName;
-                
-                const std::string _LineCommentBegin = "//";
-                
+            
+            //TODO: Make public...
+            bool LoadFile(const std::string fileName);
+            size_t LineCount();
+            
+            const std::string _LineCommentBegin = "//";
+            const std::string _BlockCommentBegin = "/*";
+            const std::string _BlockCommentEnd = "*/";
+            
+        protected:
+            
+            config_string _FileContents;
+            std::string _FileName;
+            
+            void DestroyBlockComments(std::vector<std::string>& contents);
+            void DestroyLineComments(std::vector<std::string>& contents);
+            
     };
 
 }
