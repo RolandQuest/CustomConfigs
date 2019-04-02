@@ -30,12 +30,12 @@ namespace cc
         bool isSuccess = true;
         for(auto& item : _ConfigMap)
         {
+            if(_CompMap.count(item.first) != 0)
+            {
+                Log("Component ", entry.first, " was already defined in the ComponentMap.");
+                Log("Overriding the previous component in ComponentMap. Not deleting from memory.");
+            }
             _CompMap[item.first] = (item.second)->Instantiate();
-        }
-        
-        if(isSuccess)
-        {
-            Log("Instantiation successful!");
         }
         
         return isSuccess;
@@ -52,13 +52,8 @@ namespace cc
             
             if(!localIsSuccess)
             {
-                Log("Linking issue with component '", entry.first, "'.");
+                Log("Component '",entry.first,"' linking failed.");
             }
-        }
-        
-        if(isSuccess)
-        {
-            Log("Linking successful!");
         }
         
         return isSuccess;
@@ -74,16 +69,35 @@ namespace cc
             
             if(!localIsSuccess)
             {
-                Log("Component '",entry.first,"' validation failed!");
+                Log("Component '",entry.first,"' validation failed.");
             }
         }
         
-        if(isSuccess)
+        return isSuccess;
+    }
+    
+    bool loadAndLog(const std::string& fileName)
+    {
+        ConfigurationMap tempMap;
+        std::string errorMsg;
+        
+        if(!_Loader->Load(configFile, tempMap, _FactoryVector))
         {
-            Log("Validation successful!");
+            Log("Loading of file ", fileName, " failed.");
+            return false;
         }
         
-        return isSuccess;
+        for(auto& entry : tempMap)
+        {
+            if(_ConfigMap.count(entry.first) != 0)
+            {
+                Log("Component ", entry.first, " was already defined in the ConfigurationMap.");
+                Log("Overriding the previous component in ConfigurationMap. Not deleting from memory.");
+            }
+            _ConfigMap[entry.first] = entry.second;
+        }
+        
+        return true;
     }
     
     std::string ConstructPathString(const std::vector<std::string>& path)
@@ -183,20 +197,32 @@ namespace cc
         _TargetFileBuffer = fileBuf;
     }
     
-    void clearMap()
+    void clearMaps()
+    {
+        Log("Clear called on all maps.");
+        clearConfigMap();
+        clearComponentMap();
+    }
+    
+    void clearConfigMap()
     {
         for(auto& entry : _ConfigMap)
         {
             delete entry.second;
         }
         _ConfigMap.clear();
+        Log("Clear called on configuration map.");
+    }
+    
+    void clearComponentMap()
+    {
         for(auto& entry : _CompMap)
         {
             delete entry.second;
         }
         _CompMap.clear();
         
-        Log("Clear called on all maps.");
+        Log("Clear called on component map.");
     }
     
     cc_loader* setLoader(cc_loader* loader)
@@ -235,15 +261,13 @@ namespace cc
         {
             return false;
         }
-
-        bool isSuccess = true;
-        isSuccess &= _Loader->Load(configFile, _ConfigMap, _FactoryVector);
         
-        if(isSuccess)
+        if(!loadAndLog(configFile))
         {
-            Log("Loading successful!");
+            return false;
         }
         
+        bool isSuccess = true;
         isSuccess &= validate();
         isSuccess &= instantiate();
         isSuccess &= link();
