@@ -1,11 +1,11 @@
 #include "core/cc_core_factory.h"
 
-#include <exception>
 #include <algorithm>
 
-#include "cc/cc_component_configuration.h"
-#include "core/comps/cc_distribution_config.h"
-#include "core/comps/cc_mt19937_config.h"
+#include "cc/cclog.h"
+#include "cc/cc_component.h"
+#include "core/comps/cc_distribution.h"
+#include "core/comps/cc_mt19937.h"
 
 namespace cc
 {
@@ -19,31 +19,31 @@ namespace cc
         //dtor
     }
     
-    std::vector<std::string> cc_core_factory::GetAvailableTypes() const
+    std::set<std::string> cc_core_factory::GetAvailableTypes() const
     {
-        return Types;
+        std::set<std::string> types;
+        for(const std::string& entry : Types)
+        {
+            types.insert(entry);
+        }
+        return types;
     }
     
     bool cc_core_factory::ContainsType(std::string type) const
     {
         std::transform(std::begin(type),std::end(type),std::begin(type),::tolower);
-        for(size_t i = 0; i < Types.size(); i++)
-        {
-            if(Types[i] == type)
-            {
-                return true;
-            }
-        }
-        return false;
+        return std::count(std::begin(Types),std::end(Types),type) != 0;
     }
     
-    cc_component_configuration* cc_core_factory::CreateConfiguration(const std::string& type, const std::string& name, const std::string& contents) const
+    cc_component* cc_core_factory::CreateComponent(const std::string& type, const std::string& name, const std::string& config) const
     {
-        //TODO: Change RNG to proper config.
-        if(type == Types[DISTRIBUTION]) { return new cc_distribution_config(name, contents); }
-        if(type == Types[MT19937])      { return new cc_mt19937_config(name, contents); }
+        std::string lcType = type;
+        std::transform(std::begin(lcType),std::end(lcType),std::begin(lcType),::tolower);
         
-        //TODO: Log problem.
+        if(lcType == Types[DISTRIBUTION]) { return new cc_distribution(name, config); }
+        if(lcType == Types[MT19937])      { return new cc_mt19937(name, config); }
+        
+        Log(type, " 'type' not found in call to cc_core_loader::CreateConfiguration().");
         return nullptr;
     }
 }

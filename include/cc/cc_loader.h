@@ -3,21 +3,20 @@
 
 #include <string>
 #include <map>
-#include <vector>
+#include <set>
 
 namespace cc
 {
-    class cc_component_configuration;
     class cc_factory;
-    typedef std::map<std::string, cc_component_configuration*> ConfigurationMap;
+    class cc_component;
+    typedef std::map<std::string, cc_component*> ComponentMap;
     
     class cc_loader
     {
         public:
             
             virtual ~cc_loader() = default;
-            
-            virtual bool Load(const std::string& configFile, ConfigurationMap& theMap, const std::vector<cc_factory*>& availableFactories) = 0;
+            virtual bool Load(const std::string& configFile, ComponentMap& theMap, const std::set<cc_factory*>& availableFactories) = 0;
             
     };
 }

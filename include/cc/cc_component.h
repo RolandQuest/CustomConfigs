@@ -6,21 +6,23 @@
 
 namespace cc
 {
-    class cc_component_configuration;
+    class cc_configuration_mapper;
     
     class cc_component
     {
         public:
             
-            cc_component(cc_component_configuration* config);
+            cc_component(const std::string& name, const std::string& config);
             virtual ~cc_component() = default;
             
-            //TODO: Pass through as constant.
-            virtual bool Link(std::map<std::string, cc_component*>& availableComponents) = 0;
+            virtual bool Initialize(std::map<std::string, cc_component*>& availableComponents, cc_configuration_mapper* configMapper) = 0;
+            virtual bool Validate() const;
             
         protected:
             
-            cc_component_configuration* Configuration;
+            std::string _RawConfigurationData;
+            std::string _ComponentName;
+            bool _IsValid = false;
     };
 
 }

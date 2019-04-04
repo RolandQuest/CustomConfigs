@@ -17,20 +17,20 @@ namespace cc
         //dtor
     }
     
-    bool cc_core_loader::Load(const std::string& configFile, ConfigurationMap& theMap, const std::vector<cc_factory*>& availableFactories)
+    bool cc_core_loader::Load(const std::string& configFile, ComponentMap& theMap, const std::set<cc_factory*>& availableFactories)
     {
         if(!LoadFile(configFile))
         {
             return false;
         }
         
-        _Root = new context_node();
-        CreateContextTree(_Root);
-        CreateConfigurations(_Root, theMap, availableFactories);
+        context_node* rootContext = new context_node();
+        CreateContextTree(rootContext);
+        CreateConfigurations(rootContext, theMap, availableFactories);
         return true;
     }
     
-    std::vector<std::string> cc_core_loader::CreateConfigurations(context_node* parent, ConfigurationMap& theMap, const std::vector<cc_factory*>& availableFactories)
+    std::vector<std::string> cc_core_loader::CreateConfigurations(context_node* parent, ComponentMap& theMap, const std::set<cc_factory*>& availableFactories)
     {
         for(auto& child : parent->_Children)
         {
@@ -73,7 +73,7 @@ namespace cc
         }
     }
     
-    std::string cc_core_loader::CreateComponent(ConfigurationMap& theMap, const std::vector<cc_factory*>& availableFactories, const config_string& config)
+    std::string cc_core_loader::CreateComponent(ComponentMap& theMap, const std::set<cc_factory*>& availableFactories, const config_string& config)
     {
         std::string
             type,
@@ -91,14 +91,14 @@ namespace cc
             contents += stream.get();
         }
         
-        //TODO: Check valid config first please.
-        
-        for(size_t i = 0; i < availableFactories.size(); i++)
+        //TODO: Check valid comp first please.
+        //Factory order no longer guaranteed.
+        for(cc_factory* factory : availableFactories)
         {
-            if(availableFactories[i]->ContainsType(type))
+            if(factory->ContainsType(type))
             {
-                cc_component_configuration* config = availableFactories[i]->CreateConfiguration(type, name, contents);
-                theMap[name] = config;
+                cc_component* comp = factory->CreateComponent(type, name, contents);
+                theMap[name] = comp;
                 break;
             }
         }

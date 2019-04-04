@@ -1,12 +1,16 @@
 #include "cc/cc_component.h"
 
-#include "cc/cc_component_configuration.h"
-
 namespace cc
 {
-    cc_component::cc_component(cc_component_configuration* config)
+    cc_component::cc_component(const std::string& name, const std::string& config)
     {
-        Configuration = config;
+        _ComponentName = name;
+        _RawConfigurationData = config;
+    }
+    
+    bool cc_component::Validate() const
+    {
+        return _IsValid;
     }
 }
 
