@@ -14,6 +14,7 @@ namespace cc
             virtual bool GetSetting(const std::string& configuration, const std::string& settingName, std::string& settingContents) = 0;
             virtual std::string GetWord(const std::string& content) = 0;
             virtual std::vector<std::string> GetWordVector(const std::string& content) = 0;
+            virtual std::vector< std::vector<std::string> > GetWordVectorVector(const std::string& content) = 0;
             virtual bool IsNumber(const std::string& IsNumber) = 0;
             virtual bool IsDoubleType(const std::string& IsNumber) = 0;
             virtual bool IsIntType(const std::string& IsNumber) = 0;

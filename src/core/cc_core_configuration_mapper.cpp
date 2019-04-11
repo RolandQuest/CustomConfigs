@@ -46,6 +46,8 @@ namespace cc
             std::string nextSetting;
             iss>>nextSetting;
             
+            std::transform(std::begin(nextSetting),std::end(nextSetting),std::begin(nextSetting),::tolower);
+            
             if(nextSetting == settingName)
             {
                 return pos + iss.tellg();
@@ -59,21 +61,9 @@ namespace cc
     
     std::string cc_core_configuration_mapper::GetWord(const std::string& content)
     {
-        std::istringstream stream;
-        stream.str(content);
-        stream.clear();
-        
-        std::string ret;
-        size_t startPos = content.find_first_not_of(" \t\f\v\n\r");
-        
-        if(startPos == std::string::npos)
-        {
-            return ret;
-        }
-        
-        size_t endPos = content.find_last_not_of(" \t\f\v\n\r");
-        
-        return content.substr(startPos, endPos - startPos + 1);
+        std::string ret = content;
+        Trim(ret);
+        return ret;
     }
     
     std::vector<std::string> cc_core_configuration_mapper::GetWordVector(const std::string& content)
@@ -88,6 +78,38 @@ namespace cc
         while(stream>>word)
         {
             ret.push_back(word);
+        }
+        
+        return ret;
+    }
+    
+    std::vector< std::vector<std::string> > cc_core_configuration_mapper::GetWordVectorVector(const std::string& content)
+    {
+        std::vector< std::vector<std::string> > ret;
+        
+        std::istringstream fullStream;
+        fullStream.str(content);
+        fullStream.clear();
+        
+        std::string lineContents;
+        while(std::getline(fullStream, lineContents))
+        {
+            std::istringstream lineStream;
+            lineStream.str(lineContents);
+            lineStream.clear();
+            
+            std::vector<std::string> layer;
+            
+            std::string word;
+            while(lineStream>>word)
+            {
+                layer.push_back(word);
+            }
+            
+            if(layer.size() > 0)
+            {
+                ret.push_back(layer);
+            }
         }
         
         return ret;
@@ -111,7 +133,21 @@ namespace cc
         return false;
     }
     
-
+    inline void cc_core_configuration_mapper::Trim(std::string& s)
+    {
+        LeftTrim(s);
+        RightTrim(s);
+    }
+    
+    inline void cc_core_configuration_mapper::LeftTrim(std::string& s)
+    {
+        s.erase(std::begin(s), std::find_if(std::begin(s), std::end(s), [](int ch){ return !std::isspace(ch); }));
+    }
+    
+    inline void cc_core_configuration_mapper::RightTrim(std::string& s)
+    {
+        s.erase(std::find_if(std::rbegin(s), std::rend(s), [](int ch){ return !std::isspace(ch); }).base(), std::end(s));
+    }
 
 
 

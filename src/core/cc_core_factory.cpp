@@ -43,7 +43,7 @@ namespace cc
         if(lcType == Types[DISTRIBUTION]) { return new cc_distribution(name, config); }
         if(lcType == Types[MT19937])      { return new cc_mt19937(name, config); }
         
-        Log(type, " 'type' not found in call to cc_core_loader::CreateConfiguration().");
+        Log(type, " 'type' not found in call to cc_core_factory::CreateComponent().");
         return nullptr;
     }
 }

@@ -45,6 +45,7 @@ namespace cc
             _CompMap[entry.first] = entry.second;
         }
         
+        Log("Loaded ", tempMap.size(), " new components into the map.");
         return true;
     }
     

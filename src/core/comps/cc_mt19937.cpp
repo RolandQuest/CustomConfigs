@@ -18,8 +18,15 @@ namespace cc
 
     bool cc_mt19937::Initialize(std::map<std::string, cc_component*>& availableComponents, cc_configuration_mapper* configMapper)
     {
+        _IsValid = true;
         _Seed = time(0);
-        
+        ExtractSeed(availableComponents, configMapper);
+        seed(_Seed);
+        return Validate();
+    }
+    
+    void cc_mt19937::ExtractSeed(std::map<std::string, cc_component*>& availableComponents, cc_configuration_mapper* configMapper)
+    {
         std::string subContent;
         if(configMapper->GetSetting(_RawConfigurationData, "seed", subContent))
         {
@@ -31,8 +38,6 @@ namespace cc
                 seed(_Seed);
             }
         }
-        
-        return true;
     }
     
     size_t cc_mt19937::GetSeed()

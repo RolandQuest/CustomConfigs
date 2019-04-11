@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include "cc/cc_factory.h"
+#include "cc/cclog.h"
 
 namespace cc
 {
@@ -21,6 +22,7 @@ namespace cc
     {
         if(!LoadFile(configFile))
         {
+            Log("Could not open file ", configFile, ". Maybe it doesn't exist?");
             return false;
         }
         
@@ -69,7 +71,7 @@ namespace cc
             endPos = config.Find(_ConfigurationBanner, pos + 1);
             config_string localConfig = config.SubStr(pos + 1, endPos - pos - 1);
             container.push_back(localConfig);
-            pos = config.Find(_ConfigurationBanner, pos + 1);;
+            pos = config.Find(_ConfigurationBanner, pos + 1);
         }
     }
     
@@ -86,13 +88,21 @@ namespace cc
         
         stream>>type>>name;
         
-        while(!stream.eof())
+        char nextChar;
+        while(stream.get(nextChar))
         {
-            contents += stream.get();
+            contents += nextChar;
         }
         
-        //TODO: Check valid comp first please.
-        //Factory order no longer guaranteed.
+        /*
+        std::cout<<"dataCopy"<<std::endl;
+        std::string copydata = config.GetDataCopy();
+        for(size_t i = 0; i < copydata.size(); i++)
+        {
+            std::cout<<copydata[i]<<":"<<(int)copydata[i]<<std::endl;
+        }
+        */
+        
         for(cc_factory* factory : availableFactories)
         {
             if(factory->ContainsType(type))
@@ -122,10 +132,9 @@ namespace cc
             
             std::string abreviatedLineContents;
             
-            while(!stream.eof())
+            char nextChar;
+            while(stream.get(nextChar))
             {
-                char nextChar = stream.get();
-                
                 switch(nextChar)
                 {
                     case _ContextOpen:
@@ -153,6 +162,8 @@ namespace cc
                             if(parent->IsRoot())
                             {
                                 //What are you closing now?
+                                Log("Close-of-context found on parent root.");
+                                Log("The close-of-context symbol '", _ContextClose, "' is reserved by the loader.");
                             }
                             else
                             {

@@ -17,6 +17,7 @@ namespace cc
             
             virtual bool Initialize(std::map<std::string, cc_component*>& availableComponents, cc_configuration_mapper* configMapper) = 0;
             virtual bool Validate() const;
+            std::string GetComponentName() const;
             
         protected:
             

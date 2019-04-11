@@ -10,7 +10,12 @@ namespace cc
     
     bool cc_component::Validate() const
     {
-        return _IsValid;
+        return _IsValid && !_ComponentName.empty();
+    }
+    
+    std::string cc_component::GetComponentName() const
+    {
+        return _ComponentName;
     }
 }
 

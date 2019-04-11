@@ -4,6 +4,7 @@
 
 #include "core/comps/cc_mt19937.h"
 #include "cc/cc_configuration_mapper.h"
+#include "cc/cclog.h"
 
 namespace cc
 {
@@ -27,26 +28,39 @@ namespace cc
         _IsValid = true;
         _IsValid &= ExtractRngComponent(availableComponents, configMapper);
         _IsValid &= ExtractDistribution(configMapper);
-        return _IsValid;
+        return Validate();
     }
     
     bool cc_distribution::ExtractRngComponent(std::map<std::string, cc_component*>& availableComponents, cc_configuration_mapper* configMapper)
     {
         std::string subContent;
+        
         if(configMapper->GetSetting(_RawConfigurationData, "cc_rng", subContent))
         {
             subContent = configMapper->GetWord(subContent);
             if(availableComponents.count(subContent) != 0)
             {
-                
-                //TODO: Cast around this to make sure it's possible.
-                //if(dynamic_cast<cc_mt19937*>())
-                _Rando = static_cast<cc_mt19937*>(availableComponents[subContent]);
-                return true;
-                
-                
+                if(cc_mt19937* finalPointer = dynamic_cast<cc_mt19937*>(availableComponents[subContent]))
+                {
+                    _Rando = finalPointer;
+                    return true;
+                }
+                else
+                {
+                    Log("Component '", _ComponentName, "': Reference to cc_rng could not be cast as cc_rng.");
+                }
+            }
+            else
+            {
+                Log("Component '", _ComponentName, "': References unknown cc_rng name:", subContent);
             }
         }
+        else
+        {
+            Log("Component '", _ComponentName, "': No associated cc_rng object.");
+        }
+        
+        
         return false;
     }
     
@@ -63,7 +77,16 @@ namespace cc
                 _Dist = clone;
                 return true;
             }
+            else
+            {
+                Log("Component '", _ComponentName, "': Extracted weights setting contained zero numbers.");
+            }
         }
+        else
+        {
+            Log("Component '", _ComponentName, "': Could not extract weights.");
+        }
+        
         return false;
     }
     
