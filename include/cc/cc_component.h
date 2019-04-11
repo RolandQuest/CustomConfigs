@@ -6,8 +6,6 @@
 
 namespace cc
 {
-    class cc_configuration_mapper;
-    
     class cc_component
     {
         public:
@@ -15,7 +13,7 @@ namespace cc
             cc_component(const std::string& name, const std::string& config);
             virtual ~cc_component() = default;
             
-            virtual bool Initialize(std::map<std::string, cc_component*>& availableComponents, cc_configuration_mapper* configMapper) = 0;
+            virtual bool Initialize(std::map<std::string, cc_component*>& availableComponents) = 0;
             virtual bool Validate() const;
             std::string GetComponentName() const;
             

@@ -18,7 +18,6 @@ namespace cc
     //Member variables
     ComponentMap _CompMap;
     cc_loader* _Loader = nullptr;
-    cc_configuration_mapper* _ConfigMapper = nullptr;
     std::set<cc_factory*> _FactorySet;
     
     
@@ -54,7 +53,7 @@ namespace cc
         bool isSuccess = true;
         for(auto& entry : _CompMap)
         {
-            bool localIsSuccess = (entry.second)->Initialize(_CompMap, _ConfigMapper);
+            bool localIsSuccess = (entry.second)->Initialize(_CompMap);
             isSuccess &= localIsSuccess;
             
             if(!localIsSuccess)
@@ -90,13 +89,6 @@ namespace cc
         return _Loader;
     }
     
-    cc_configuration_mapper* setConfigMapper(cc_configuration_mapper* mapper)
-    {
-        _ConfigMapper = mapper;
-        Log("Mapper set of type: ", typeid(&mapper).name());
-        return _ConfigMapper;
-    }
-    
     cc_factory* registerFactory(cc_factory* factory)
     {
         _FactorySet.insert(factory);
@@ -115,11 +107,6 @@ namespace cc
         if(_Loader == nullptr)
         {
            Log("No loader set when loading ", configFile);
-           isSuccess = false;
-        }
-        if(_ConfigMapper == nullptr)
-        {
-           Log("No configuration mapper set when loading ", configFile);
            isSuccess = false;
         }
         return isSuccess;

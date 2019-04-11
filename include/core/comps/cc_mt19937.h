@@ -9,8 +9,6 @@
 
 namespace cc
 {
-    class cc_configuration_mapper;
-    
     class cc_mt19937 : public cc_component, public std::mt19937
     {
         public:
@@ -18,12 +16,12 @@ namespace cc
             cc_mt19937(const std::string& name, const std::string& config);
             virtual ~cc_mt19937();
 
-            bool Initialize(std::map<std::string, cc_component*>& availableComponents, cc_configuration_mapper* configMapper) override;
+            bool Initialize(std::map<std::string, cc_component*>& availableComponents) override;
             size_t GetSeed();
             
         private:
             
-            void ExtractSeed(std::map<std::string, cc_component*>& availableComponents, cc_configuration_mapper* configMapper);
+            void ExtractSeed();
             
             size_t _Seed;
         

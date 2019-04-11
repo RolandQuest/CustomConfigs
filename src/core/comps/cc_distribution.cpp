@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "core/comps/cc_mt19937.h"
-#include "cc/cc_configuration_mapper.h"
+#include "core/cc_config_helper.h"
 #include "cc/cclog.h"
 
 namespace cc
@@ -23,21 +23,21 @@ namespace cc
         return _Dist(*_Rando);
     }
     
-    bool cc_distribution::Initialize(std::map<std::string, cc_component*>& availableComponents, cc_configuration_mapper* configMapper)
+    bool cc_distribution::Initialize(std::map<std::string, cc_component*>& availableComponents)
     {
         _IsValid = true;
-        _IsValid &= ExtractRngComponent(availableComponents, configMapper);
-        _IsValid &= ExtractDistribution(configMapper);
+        _IsValid &= ExtractRngComponent(availableComponents);
+        _IsValid &= ExtractDistribution();
         return Validate();
     }
     
-    bool cc_distribution::ExtractRngComponent(std::map<std::string, cc_component*>& availableComponents, cc_configuration_mapper* configMapper)
+    bool cc_distribution::ExtractRngComponent(std::map<std::string, cc_component*>& availableComponents)
     {
         std::string subContent;
         
-        if(configMapper->GetSetting(_RawConfigurationData, "cc_rng", subContent))
+        if(cc::GetSetting(_RawConfigurationData, "cc_rng", subContent))
         {
-            subContent = configMapper->GetWord(subContent);
+            subContent = cc::GetFirstWord(subContent);
             if(availableComponents.count(subContent) != 0)
             {
                 if(cc_mt19937* finalPointer = dynamic_cast<cc_mt19937*>(availableComponents[subContent]))
@@ -64,13 +64,13 @@ namespace cc
         return false;
     }
     
-    bool cc_distribution::ExtractDistribution(cc_configuration_mapper* configMapper)
+    bool cc_distribution::ExtractDistribution()
     {
         std::string subContent;
-        if(configMapper->GetSetting(_RawConfigurationData, "weights", subContent))
+        if(cc::GetSetting(_RawConfigurationData, "weights", subContent))
         {
-            std::vector<std::string> rawWeights = configMapper->GetWordVector(subContent);
-            std::vector<double> trueWeights = configMapper->ConvertVector<double>(rawWeights);
+            std::vector<std::string> rawWeights = cc::GetWordVector(subContent);
+            std::vector<double> trueWeights = cc::ConvertVector<double>(rawWeights);
             if(trueWeights.size() != 0)
             {
                 std::discrete_distribution<int> clone(std::begin(trueWeights), std::end(trueWeights));

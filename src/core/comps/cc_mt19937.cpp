@@ -2,7 +2,7 @@
 
 #include <time.h>
 
-#include "cc/cc_configuration_mapper.h"
+#include "core/cc_config_helper.h"
 
 namespace cc
 {
@@ -16,25 +16,25 @@ namespace cc
         //dtor
     }
 
-    bool cc_mt19937::Initialize(std::map<std::string, cc_component*>& availableComponents, cc_configuration_mapper* configMapper)
+    bool cc_mt19937::Initialize(std::map<std::string, cc_component*>& availableComponents)
     {
         _IsValid = true;
         _Seed = time(0);
-        ExtractSeed(availableComponents, configMapper);
+        ExtractSeed();
         seed(_Seed);
         return Validate();
     }
     
-    void cc_mt19937::ExtractSeed(std::map<std::string, cc_component*>& availableComponents, cc_configuration_mapper* configMapper)
+    void cc_mt19937::ExtractSeed()
     {
         std::string subContent;
-        if(configMapper->GetSetting(_RawConfigurationData, "seed", subContent))
+        if(cc::GetSetting(_RawConfigurationData, "seed", subContent))
         {
-            subContent = configMapper->GetWord(subContent);
-            if(configMapper->IsNumber(subContent))
+            subContent = cc::GetFirstWord(subContent);
+            if(cc::IsNumber(subContent))
             {
-                subContent = configMapper->GetWord(subContent);
-                _Seed = configMapper->ConvertWord<size_t>(subContent);
+                subContent = cc::GetFirstWord(subContent);
+                _Seed = cc::ConvertWord<size_t>(subContent);
                 seed(_Seed);
             }
         }
