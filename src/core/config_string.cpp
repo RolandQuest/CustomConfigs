@@ -3,10 +3,6 @@
 #include <algorithm>
 #include <sstream>
 
-//TEST
-#include <iostream>
-
-
 namespace cc
 {
 
@@ -27,6 +23,7 @@ namespace cc
             _Data.insert(std::end(_Data), std::begin(strVec[i]), std::end(strVec[i]));
             _Data.push_back('\n');
         }
+        
         CalculateLineCount();
     }
     config_string::config_string(const config_string& other)

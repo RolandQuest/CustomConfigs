@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include "cc/cc_factory.h"
+#include "cc/cclog.h"
 
 namespace cc
 {
@@ -17,20 +18,21 @@ namespace cc
         //dtor
     }
     
-    bool cc_core_loader::Load(const std::string& configFile, ConfigurationMap& theMap, const std::vector<cc_factory*>& availableFactories)
+    bool cc_core_loader::Load(const std::string& configFile, ComponentMap& theMap, const std::set<cc_factory*>& availableFactories)
     {
         if(!LoadFile(configFile))
         {
+            Log("Could not open file ", configFile, ". Maybe it doesn't exist?");
             return false;
         }
         
-        _Root = new context_node();
-        CreateContextTree(_Root);
-        CreateConfigurations(_Root, theMap, availableFactories);
+        context_node* rootContext = new context_node();
+        CreateContextTree(rootContext);
+        CreateConfigurations(rootContext, theMap, availableFactories);
         return true;
     }
     
-    std::vector<std::string> cc_core_loader::CreateConfigurations(context_node* parent, ConfigurationMap& theMap, const std::vector<cc_factory*>& availableFactories)
+    std::vector<std::string> cc_core_loader::CreateConfigurations(context_node* parent, ComponentMap& theMap, const std::set<cc_factory*>& availableFactories)
     {
         for(auto& child : parent->_Children)
         {
@@ -69,11 +71,11 @@ namespace cc
             endPos = config.Find(_ConfigurationBanner, pos + 1);
             config_string localConfig = config.SubStr(pos + 1, endPos - pos - 1);
             container.push_back(localConfig);
-            pos = config.Find(_ConfigurationBanner, pos + 1);;
+            pos = config.Find(_ConfigurationBanner, pos + 1);
         }
     }
     
-    std::string cc_core_loader::CreateComponent(ConfigurationMap& theMap, const std::vector<cc_factory*>& availableFactories, const config_string& config)
+    std::string cc_core_loader::CreateComponent(ComponentMap& theMap, const std::set<cc_factory*>& availableFactories, const config_string& config)
     {
         std::string
             type,
@@ -86,19 +88,27 @@ namespace cc
         
         stream>>type>>name;
         
-        while(!stream.eof())
+        char nextChar;
+        while(stream.get(nextChar))
         {
-            contents += stream.get();
+            contents += nextChar;
         }
         
-        //TODO: Check valid config first please.
-        
-        for(size_t i = 0; i < availableFactories.size(); i++)
+        /*
+        std::cout<<"dataCopy"<<std::endl;
+        std::string copydata = config.GetDataCopy();
+        for(size_t i = 0; i < copydata.size(); i++)
         {
-            if(availableFactories[i]->ContainsType(type))
+            std::cout<<copydata[i]<<":"<<(int)copydata[i]<<std::endl;
+        }
+        */
+        
+        for(cc_factory* factory : availableFactories)
+        {
+            if(factory->ContainsType(type))
             {
-                cc_component_configuration* config = availableFactories[i]->CreateConfiguration(type, name, contents);
-                theMap[name] = config;
+                cc_component* comp = factory->CreateComponent(type, name, contents);
+                theMap[name] = comp;
                 break;
             }
         }
@@ -122,10 +132,9 @@ namespace cc
             
             std::string abreviatedLineContents;
             
-            while(!stream.eof())
+            char nextChar;
+            while(stream.get(nextChar))
             {
-                char nextChar = stream.get();
-                
                 switch(nextChar)
                 {
                     case _ContextOpen:
@@ -153,6 +162,8 @@ namespace cc
                             if(parent->IsRoot())
                             {
                                 //What are you closing now?
+                                Log("Close-of-context found on parent root.");
+                                Log("The close-of-context symbol '", _ContextClose, "' is reserved by the loader.");
                             }
                             else
                             {

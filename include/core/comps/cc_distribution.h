@@ -1,33 +1,35 @@
 #ifndef CC_DISTRIBUTION_H
 #define CC_DISTRIBUTION_H
 
-#include <vector>
 #include <string>
 #include <random>
+#include <map>
 
 #include "cc/cc_component.h"
-#include "core/comps/cc_mt19937.h"
 
 namespace cc
 {
     class cc_mt19937;
+    class cc_configuration_mapper;
     
-    //TODO: template<class DistType, class WeightType>
     class cc_distribution : public cc_component
     {
-        
+
         public:
-            
-            cc_distribution(cc_component_configuration* config, const std::vector<double>& rawData);
+
+            cc_distribution(const std::string& name, const std::string& config);
             virtual ~cc_distribution();
-            
-            bool Link(std::map<std::string, cc_component*>& availableComponents) override;
+
+            bool Initialize(std::map<std::string, cc_component*>& availableComponents, cc_configuration_mapper* configMapper) override;
             int Next();
-            
+
         private:
+
+            bool ExtractRngComponent(std::map<std::string, cc_component*>& availableComponents, cc_configuration_mapper* configMapper);
+            bool ExtractDistribution(cc_configuration_mapper* configMapper);
             
-            cc_mt19937* RANDO;
-            std::discrete_distribution<int> Dist;
+            cc_mt19937* _Rando;
+            std::discrete_distribution<int> _Dist;
     };
 
 }
