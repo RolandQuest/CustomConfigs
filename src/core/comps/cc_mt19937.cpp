@@ -18,11 +18,13 @@ namespace cc
 
     bool cc_mt19937::Initialize(std::map<std::string, cc_component*>& availableComponents)
     {
-        _IsValid = true;
+        cc_component::Initialize(availableComponents);
+        
         _Seed = time(0);
         ExtractSeed();
         seed(_Seed);
-        return Validate();
+        
+        return _IsValid;
     }
     
     void cc_mt19937::ExtractSeed()

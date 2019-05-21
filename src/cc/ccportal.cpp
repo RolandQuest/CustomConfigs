@@ -10,7 +10,6 @@
 #include "cc/cc_component.h"
 #include "cc/cc_loader.h"
 #include "cc/cc_factory.h"
-#include "cc/cclog.h"
 
 namespace cc
 {
@@ -82,6 +81,11 @@ namespace cc
         Log("Clear called on component map.");
     }
     
+    bool checkForComponent(const std::string name)
+    {
+        return _CompMap.count(name) == 1;
+    }
+    
     cc_loader* setLoader(cc_loader* loader)
     {
         _Loader = loader;
@@ -122,10 +126,7 @@ namespace cc
             return false;
         }
         
-        bool isSuccess = loadAndLog(configFile);
-        isSuccess &= initialize();
-        
-        return isSuccess;
+        return loadAndLog(configFile);
     }
 }
 

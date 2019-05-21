@@ -1,6 +1,7 @@
 #include "core/cc_config_helper.h"
 
 #include <algorithm>
+#include <iostream>
 
 namespace cc
 {
@@ -69,6 +70,38 @@ namespace cc
         while(stream>>word)
         {
             ret.push_back(word);
+        }
+        
+        return ret;
+    }
+    
+    std::vector< std::vector<std::string> > GetWordVector2d(const std::string& content)
+    {
+        std::vector< std::vector<std::string> > ret;
+        
+        std::istringstream stream;
+        stream.str(content);
+        stream.clear();
+        
+        std::string vecInfo;
+        while(std::getline(stream, vecInfo))
+        {
+            std::istringstream subStream;
+            subStream.str(vecInfo);
+            subStream.clear();
+            
+            std::vector<std::string> subVector;
+            
+            std::string word;
+            while(subStream>>word)
+            {
+                subVector.push_back(word);
+            }
+            
+            if(subVector.size() > 0)
+            {
+                ret.push_back(subVector);
+            }
         }
         
         return ret;

@@ -13,9 +13,9 @@ namespace cc
             cc_component(const std::string& name, const std::string& config);
             virtual ~cc_component() = default;
             
-            virtual bool Initialize(std::map<std::string, cc_component*>& availableComponents) = 0;
-            virtual bool Validate() const;
-            std::string GetComponentName() const;
+            virtual bool Initialize(std::map<std::string, cc_component*>& availableComponents);
+            bool IsValid() const;
+            const std::string& GetComponentName() const;
             
         protected:
             

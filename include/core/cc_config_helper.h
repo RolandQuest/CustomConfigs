@@ -13,6 +13,7 @@ namespace cc
     
     std::string GetFirstWord(const std::string& content);
     std::vector<std::string> GetWordVector(const std::string& content);
+    std::vector< std::vector<std::string> > GetWordVector2d(const std::string& content);
     bool IsNumber(const std::string& s);
     bool IsDoubleType(const std::string& s);
     bool IsIntType(const std::string& s);
@@ -20,8 +21,6 @@ namespace cc
     std::string Trim(const std::string& str);
     std::string LeftTrim(const std::string& str);
     std::string RightTrim(const std::string& str);
-    
-    
     
     template<class T>
     T ConvertWord(const std::string& content)
@@ -55,8 +54,6 @@ namespace cc
         return ret;
     }
     
-    //ARCHIVE
-    //std::vector< std::vector<std::string> > GetWordVectorVector(const std::string& content) override;
 }
 
 #endif // CC_CONFIG_HELPER_H

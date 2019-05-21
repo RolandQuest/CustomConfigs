@@ -25,10 +25,11 @@ namespace cc
     
     bool cc_distribution::Initialize(std::map<std::string, cc_component*>& availableComponents)
     {
-        _IsValid = true;
+        cc_component::Initialize(availableComponents);
+        
         _IsValid &= ExtractRngComponent(availableComponents);
         _IsValid &= ExtractDistribution();
-        return Validate();
+        return _IsValid;
     }
     
     bool cc_distribution::ExtractRngComponent(std::map<std::string, cc_component*>& availableComponents)

@@ -8,12 +8,18 @@ namespace cc
         _RawConfigurationData = config;
     }
     
-    bool cc_component::Validate() const
+    bool cc_component::Initialize(std::map<std::string, cc_component*>& availableComponents)
     {
-        return _IsValid && !_ComponentName.empty();
+        _IsValid = true;
+        return _IsValid;
     }
     
-    std::string cc_component::GetComponentName() const
+    bool cc_component::IsValid() const
+    {
+        return _IsValid;
+    }
+    
+    const std::string& cc_component::GetComponentName() const
     {
         return _ComponentName;
     }
