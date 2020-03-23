@@ -4,7 +4,7 @@ namespace cc
 {
 
     //TODO: This requires that the clog streambuf hasn't been altered already.
-    std::filebuf* _TargetFileBuffer = nullptr;
-    std::streambuf* _OriginalClogBuffer = std::clog.rdbuf();
+    std::filebuf* _cc_log_TargetFileBuffer = nullptr;
+    std::streambuf* _cc_log_OriginalClogBuffer = std::clog.rdbuf();
     
 }

@@ -13,17 +13,17 @@ namespace cc
     {
         public:
             
-            cc_mt19937(const std::string& name, const std::string& config);
-            virtual ~cc_mt19937();
+            cc_mt19937() = default;
+            virtual ~cc_mt19937() = default;
 
-            bool Initialize(std::map<std::string, cc_component*>& availableComponents) override;
-            size_t GetSeed();
+            cc_config* cc_component_config() const override;
+            bool cc_initialize(cc_kComponentMap& availableComponents) override;
+
+            unsigned int GetSeed();
             
         private:
             
-            void ExtractSeed();
-            
-            size_t _Seed;
+            unsigned int _Seed;
         
     };
 

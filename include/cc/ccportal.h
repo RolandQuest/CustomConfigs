@@ -4,24 +4,25 @@
 #include <map>
 #include <string>
 #include <set>
+#include <ostream>
 
 #include "cc/cclog.h"
+#include "cc/cc_factory.h"
+#include "cc/cc_loader.h"
+#include "cc/cc_component.h"
 
 namespace cc
 {
-    class cc_factory;
-    class cc_loader;
-    class cc_component;
-    typedef std::map<std::string, cc_component*> ComponentMap;
-    
+
     //Member variables
-    extern ComponentMap _CompMap;
+    extern cc_ComponentMap _CompMap;
     extern cc_loader* _Loader;
-    extern std::set<cc_factory*> _FactorySet;
+    extern cc_FactorySet _FactorySet;
     
     //Public functions
     bool load(const std::string& configFile);
     bool initialize();
+    void serialize(std::ostream& stream);
     cc_loader* setLoader(cc_loader* loader);
     cc_factory* registerFactory(cc_factory* factory);
     void clearComponentMap();

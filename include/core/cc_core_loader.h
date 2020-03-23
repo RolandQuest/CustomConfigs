@@ -4,49 +4,42 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <ostream>
 #include <set>
 
+#include "cc/cc_component.h"
+#include "cc/cc_factory.h"
 #include "cc/cc_loader.h"
-#include "core/cc_base_loader.h"
-#include "core/context_node.h"
+#include "cc/cc_token.h"
+#include "cc/cc_config.h"
+#include "core/cc_core_loader_settings.h"
 
 namespace cc
 {
-    class cc_component;
-    class cc_factory;
-    typedef std::map<std::string, cc_component*> ComponentMap;
-    
-    class cc_core_loader : public cc_loader, public cc_base_loader
+    class cc_core_loader : public cc_loader
     {
         public:
             
-            cc_core_loader();
-            virtual ~cc_core_loader();
+            cc_core_loader() = default;
+            virtual ~cc_core_loader() = default;
             
-            bool Load(const std::string& configFile, ComponentMap& theMap, const std::set<cc_factory*>& availableFactories) override;
-            
+            bool cc_loader_load(const std::string& configFile, cc_ComponentMap& theMap, cc_kFactorySet& availableFactories) override;
+            void cc_loader_serialize(std::ostream& stream, cc_component* component) override;
+
+			cc_core_loader_settings settings;
+
         private:
             
-            std::vector<std::string> CreateConfigurations(context_node* parent, ComponentMap& theMap, const std::set<cc_factory*>& availableFactories);
-            void CreateContextTree(context_node* parent);
-            std::string GetUniqueName();
-            
-            void LoadContents(context_node* node, std::vector<std::string>& compNames);
-            void ExtractComponents(context_node* node, std::vector<config_string>& allComponents);
-            void CreateComponents(const std::vector<config_string>& allConfigStrings, std::vector<std::string>& compNames);
-            void SplitConfigs(const config_string& config, std::vector<config_string>& container);
-            
-            std::string CreateComponent(ComponentMap& theMap, const std::set<cc_factory*>& availableFactories, const config_string& config);
-            
-            
-            
-            static constexpr char _ConfigurationBanner = '#';
-            static constexpr char _ContextOpen = '{';
-            static constexpr char _ContextClose = '}';
-            
-            const std::string _UniqueNameHeader = "cc_core_loader_unique_";
+            cc_config* GenerateConfig(cc_TokenVec& comp);
+            void CreateComponents(cc_ComponentMap& theMap, cc_kFactorySet& availableFactories, cc_TokenVec2d& components);
+            void ConstructComponents(cc_TokenVec2d& contexts, cc_TokenVec2d& components);
+            cc_TokenVec ConstructContexts(cc_TokenVec& allTokens, cc_TokenVec2d& contexts, size_t& pos, size_t& contextLevel);
+            void ClearComments(cc_TokenVec& allTokens);
+            bool LoadTokens(const std::string& configFile, cc_TokenVec& allTokens);
+            void DelimitWord(const std::string& word, cc_TokenVec& allTokens);
+
+			std::string GetUniqueName();
             int _UniqueNameIncrement = -1;
-            
     };
 
 }

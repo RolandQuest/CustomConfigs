@@ -2,47 +2,35 @@
 
 #include <time.h>
 
-#include "core/cc_config_helper.h"
-
 namespace cc
 {
-    cc_mt19937::cc_mt19937(const std::string& name, const std::string& config) : cc_component(name, config)
-    {
-        //ctor
-    }
 
-    cc_mt19937::~cc_mt19937()
+    bool cc_mt19937::cc_initialize(cc_kComponentMap& availableComponents)
     {
-        //dtor
-    }
+        cc_component::cc_initialize(availableComponents);
+        
+        _Seed = (unsigned int) time(0);
 
-    bool cc_mt19937::Initialize(std::map<std::string, cc_component*>& availableComponents)
-    {
-        cc_component::Initialize(availableComponents);
-        
-        _Seed = time(0);
-        ExtractSeed();
-        seed(_Seed);
-        
-        return _IsValid;
-    }
-    
-    void cc_mt19937::ExtractSeed()
-    {
-        std::string subContent;
-        if(cc::GetSetting(_RawConfigurationData, "seed", subContent))
-        {
-            subContent = cc::GetFirstWord(subContent);
-            if(cc::IsNumber(subContent))
-            {
-                subContent = cc::GetFirstWord(subContent);
-                _Seed = cc::ConvertWord<size_t>(subContent);
+        std::string seedString;
+        if (_cc_config->AsSingle("seed", seedString)) {
+
+            if (cc_config::IsUnsignedInteger(seedString)) {
+
+                _cc_config->AsSingle("seed", _Seed);
                 seed(_Seed);
             }
         }
+
+        _cc_config->MetaData.push_back("Seed used: " + std::to_string(_Seed));
+        return true;
     }
     
-    size_t cc_mt19937::GetSeed()
+    cc_config* cc_mt19937::cc_component_config() const {
+
+        return _cc_config;
+    }
+
+    unsigned int cc_mt19937::GetSeed()
     {
         return _Seed;
     }

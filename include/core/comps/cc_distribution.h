@@ -6,20 +6,16 @@
 #include <map>
 
 #include "cc/cc_component.h"
+#include "core/comps/cc_mt19937.h"
 
 namespace cc
 {
-    class cc_mt19937;
-    
     class cc_distribution : public cc_component
     {
 
         public:
 
-            cc_distribution(const std::string& name, const std::string& config);
-            virtual ~cc_distribution();
-
-            bool Initialize(std::map<std::string, cc_component*>& availableComponents) override;
+            bool cc_initialize(cc_ComponentMap& availableComponents) override;
             int Next();
 
         private:

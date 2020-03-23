@@ -1,11 +1,8 @@
 #include "cc/ccportal.h"
 
-#include <map>
-#include <string>
 #include <vector>
 #include <fstream>
 #include <typeinfo>
-#include <set>
 
 #include "cc/cc_component.h"
 #include "cc/cc_loader.h"
@@ -15,9 +12,9 @@ namespace cc
 {
     
     //Member variables
-    ComponentMap _CompMap;
+    cc_ComponentMap _CompMap;
     cc_loader* _Loader = nullptr;
-    std::set<cc_factory*> _FactorySet;
+    cc_FactorySet _FactorySet;
     
     
     //Private functions.
@@ -25,9 +22,9 @@ namespace cc
     bool loadAndLog(const std::string& fileName)
     {
         std::string errorMsg;
-        ComponentMap tempMap;
+        cc_ComponentMap tempMap;
         
-        if(!_Loader->Load(fileName, tempMap, _FactorySet))
+        if(!_Loader->cc_loader_load(fileName, tempMap, _FactorySet))
         {
             Log("Loading of file ", fileName, " failed.");
             return false;
@@ -52,7 +49,7 @@ namespace cc
         bool isSuccess = true;
         for(auto& entry : _CompMap)
         {
-            bool localIsSuccess = (entry.second)->Initialize(_CompMap);
+            bool localIsSuccess = (entry.second)->cc_initialize(_CompMap);
             isSuccess &= localIsSuccess;
             
             if(!localIsSuccess)
@@ -67,7 +64,7 @@ namespace cc
     
     void setCCLogFileBuf(std::filebuf* fileBuf)
     {
-        _TargetFileBuffer = fileBuf;
+        _cc_log_TargetFileBuffer = fileBuf;
     }
     
     void clearComponentMap()
@@ -127,6 +124,15 @@ namespace cc
         }
         
         return loadAndLog(configFile);
+    }
+
+    void serialize(std::ostream& stream) {
+
+        for (auto& entry : _CompMap) {
+
+            _Loader->cc_loader_serialize(stream, entry.second);
+            stream.flush();
+        }
     }
 }
 

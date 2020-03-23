@@ -3,29 +3,18 @@
 #include <vector>
 
 #include "core/comps/cc_mt19937.h"
-#include "core/cc_config_helper.h"
 #include "cc/cclog.h"
 
 namespace cc
 {
-    cc_distribution::cc_distribution(const std::string& name, const std::string& config) : cc_component(name, config)
-    {
-        
-    }
-
-    cc_distribution::~cc_distribution()
-    {
-        //dtor
-    }
-    
     int cc_distribution::Next()
     {
         return _Dist(*_Rando);
     }
     
-    bool cc_distribution::Initialize(std::map<std::string, cc_component*>& availableComponents)
+    bool cc_distribution::cc_initialize(std::map<std::string, cc_component*>& availableComponents)
     {
-        cc_component::Initialize(availableComponents);
+        cc_component::cc_initialize(availableComponents);
         
         _IsValid &= ExtractRngComponent(availableComponents);
         _IsValid &= ExtractDistribution();
