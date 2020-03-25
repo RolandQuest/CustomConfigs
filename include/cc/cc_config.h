@@ -106,6 +106,23 @@ namespace cc
 			return false;
 		}
 
+		std::vector<size_t> words = find_all_of(_configData.at(name), CoreToken::kWord);
+
+		if (words.size() == 0) {
+			return false;
+		}
+
+		std::stringstream ss;
+
+		for (size_t i = 0; i < words.size(); i++) {
+			ss.str(_configData.at(name)[words[i]]->value);
+			ss.clear();
+
+			T val;
+			ss >> val;
+			container.push_back(val);
+		}
+		
 		return true;
 	}
 
@@ -115,6 +132,29 @@ namespace cc
 
 		if (!NameExists(name)) {
 			return false;
+		}
+
+		std::stringstream ss;
+		std::vector<T> vec;
+		T w;
+
+		for (auto& word : _configData.at(name)) {
+
+			if (word->type == CoreToken::kWord) {
+
+				ss.str(word->value);
+				ss.clear();
+
+				ss >> w;
+				vec.push_back(w);
+
+				continue;
+			}
+
+			if (vec.size() > 0) {
+				container.push_back(vec);
+				vec.clear();
+			}
 		}
 
 		return true;
@@ -128,6 +168,30 @@ namespace cc
 			return false;
 		}
 
+		std::stringstream ss;
+		bool newEntry = true;
+		key k;
+		val v;
+
+		for (auto& word : _configData.at(name)) {
+
+			if (word->type == CoreToken::kWord) {
+
+				ss.str(word->value);
+				ss.clear();
+
+				if (newEntry) {
+					ss >> k;
+					newEntry = false;
+				}
+				else {
+					ss >> v;
+					container[k] = v;
+					newEntry = true;
+				}
+				continue;
+			}
+		}
 		return true;
 	}
 
@@ -137,6 +201,38 @@ namespace cc
 
 		if (!NameExists(name)) {
 			return false;
+		}
+
+		std::stringstream ss;
+		bool newEntry = true;
+		key k;
+		val v;
+		std::vector<val> vec;
+
+		for (auto& word : _configData.at(name)) {
+
+			if (word->type == CoreToken::kWord) {
+
+				ss.str(word->value);
+				ss.clear();
+
+				if (newEntry) {
+					ss >> k;
+					newEntry = false;
+				}
+				else {
+					ss >> v;
+					vec.push_back(v);
+				}
+				continue;
+			}
+
+			if (vec.size() > 0) {
+
+				container[k] = vec;
+				vec.clear();
+			}
+			newEntry = true;
 		}
 
 		return true;

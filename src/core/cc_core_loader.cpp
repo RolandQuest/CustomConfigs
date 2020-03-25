@@ -40,13 +40,13 @@ namespace cc
 
 		for (auto& key : keys) {
 
-			stream << settings.SettingBanner << key << '\n';
+			stream << '\t' << settings.SettingBanner << key << '\t';
 
 			cc_TokenVec vec;
 			config->AsTokenVector(key, vec);
 
 			for (auto& tok : vec) {
-				stream << tok->value;
+				stream << '\t' << tok->value;
 			}
 			stream << '\n';
 		}
