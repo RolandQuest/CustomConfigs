@@ -9,12 +9,21 @@
 
 namespace cc
 {
+    /**
+    Base class for the cc portal factory types used.
+    Could perhaps be simplified a tad, but at least one of cc_available_types and cc_contains_type must be present.
+    */
     class cc_factory
     {
         public:
             
+            //! Returns a set of available component types that can be created.
             virtual std::set<std::string> cc_available_types() const = 0;
+
+            //! Checks to see if a type can be created using this factory.
             virtual bool cc_contains_type(std::string type) const = 0;
+
+            //! Creates the component.
             virtual cc_component* cc_create_component(const std::string& type, const std::string& name, cc_config* config) const = 0;
 
         protected:

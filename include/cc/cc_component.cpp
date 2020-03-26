@@ -43,6 +43,11 @@ namespace cc
 		return _cc_type;
 	}
 
+	const cc_config* const cc_component::cc_component_config() const {
+
+		return _cc_config;
+	}
+
 	bool cc_component::cc_initialize(const std::map<std::string, cc::cc_component*>& availableComponents) {
 
 		_cc_is_initialized = true;

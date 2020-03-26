@@ -6,6 +6,7 @@
 
 namespace cc
 {
+	//! \enum Enumeration example
 	enum class CoreToken : size_t
 	{
 		kComponentBanner = 0,
