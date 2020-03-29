@@ -3,6 +3,7 @@
 #include <sstream>
 #include <algorithm>
 
+#include "cc/ccportal.h"
 #include "cc/cclog.h"
 
 namespace cc
@@ -26,7 +27,7 @@ namespace cc
 
 	void cc_core_loader::cc_loader_serialize(std::ostream& stream, cc_component* component) {
 
-		cc_config* config = component->cc_component_config();
+		const cc_config* const config = component->cc_component_config();
 		std::vector<std::string> keys = config->ConfigDataKeys();
 
 		if (settings.EnableComments) {
@@ -43,7 +44,7 @@ namespace cc
 			stream << '\t' << settings.SettingBanner << key << '\t';
 
 			cc_TokenVec vec;
-			config->AsTokenVector(key, vec);
+			config->TokenVector(key, vec);
 
 			for (auto& tok : vec) {
 				stream << '\t' << tok->value;
@@ -388,10 +389,4 @@ namespace cc
 
 	}
 
-    std::string cc_core_loader::GetUniqueName()
-    {
-		return settings.UniqueNameHeader + std::to_string(_UniqueNameIncrement);
-    }
-    
-    
 }

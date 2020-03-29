@@ -15,13 +15,6 @@ namespace cc
 		}
 	}
 
-	void cc_component::cc_set_type(std::string type) {
-
-		if (_cc_type == _cc_default_name) {
-			_cc_type = type;
-		}
-	}
-
 	void cc_component::cc_set_configuration(cc_config* config) {
 
 		_cc_config = config;
@@ -38,9 +31,9 @@ namespace cc
 		return _cc_name;
 	}
 
-	const std::string& cc_component::cc_component_type() const {
+	std::string cc_component::cc_component_type() const {
 
-		return _cc_type;
+		return "cc_component";
 	}
 
 	const cc_config* const cc_component::cc_component_config() const {
@@ -48,7 +41,7 @@ namespace cc
 		return _cc_config;
 	}
 
-	bool cc_component::cc_initialize(const std::map<std::string, cc::cc_component*>& availableComponents) {
+	bool cc_component::cc_initialize(cc_kComponentMap& availableComponents) {
 
 		_cc_is_initialized = true;
 		return true;

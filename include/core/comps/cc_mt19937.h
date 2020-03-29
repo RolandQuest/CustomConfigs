@@ -16,14 +16,15 @@ namespace cc
             cc_mt19937() = default;
             virtual ~cc_mt19937() = default;
 
-            cc_config* cc_component_config() const override;
+            const cc_config* const cc_component_config() const override;
             bool cc_initialize(cc_kComponentMap& availableComponents) override;
+            std::string cc_type() const;
 
             unsigned int GetSeed();
             
         private:
             
-            unsigned int _Seed;
+            unsigned int _Seed = 0;
         
     };
 

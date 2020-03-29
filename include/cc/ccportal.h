@@ -16,19 +16,19 @@ namespace cc
 
     //Member variables
     extern cc_ComponentMap _CompMap;
-    extern cc_loader* _Loader;
-    extern cc_FactorySet _FactorySet;
     
     //Public functions
     bool load(const std::string& configFile);
     bool initialize();
+    bool initialize(cc_component* compPointer);
     void serialize(std::ostream& stream);
     cc_loader* setLoader(cc_loader* loader);
     cc_factory* registerFactory(cc_factory* factory);
+    bool insertComponent(cc_component* component);
     void clearComponentMap();
     void setCCLogFileBuf(std::filebuf* fileBuf);
     bool checkForComponent(const std::string name);
-    
+    std::string getUniqueName();
     
     //Template functions
     

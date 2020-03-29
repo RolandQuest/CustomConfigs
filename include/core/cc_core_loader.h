@@ -38,7 +38,6 @@ namespace cc
             bool LoadTokens(const std::string& configFile, cc_TokenVec& allTokens);
             void DelimitWord(const std::string& word, cc_TokenVec& allTokens);
 
-			std::string GetUniqueName();
             int _UniqueNameIncrement = -1;
     };
 

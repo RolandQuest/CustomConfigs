@@ -15,10 +15,10 @@ namespace cc
     cc_ComponentMap _CompMap;
     cc_loader* _Loader = nullptr;
     cc_FactorySet _FactorySet;
-    
-    
+    const std::string _UniqueNameHeader = "cc_reserved_";
+    int _UniqueNameIncrement = -1;
+
     //Private functions.
-    
     bool loadAndLog(const std::string& fileName)
     {
         std::string errorMsg;
@@ -43,25 +43,52 @@ namespace cc
         Log("Loaded ", tempMap.size(), " new components into the map.");
         return true;
     }
-    
+
+    //Public functions.
+
     bool initialize()
     {
         bool isSuccess = true;
         for(auto& entry : _CompMap)
         {
-            bool localIsSuccess = (entry.second)->cc_initialize(_CompMap);
-            isSuccess &= localIsSuccess;
-            
-            if(!localIsSuccess)
-            {
-                Log("Failed to initialize ", entry.first, " component.");
-            }
+            initialize(entry.second);
         }
         return isSuccess;
     }
     
-    //Public functions.
-    
+    bool initialize(cc_component* compPointer)
+    {
+        static std::vector<cc_component*> _init_chain;
+
+        if (compPointer->cc_is_initialized()) {
+            return true;
+        }
+
+        _init_chain.push_back(compPointer);
+        if (std::find(std::begin(_init_chain), std::end(_init_chain), compPointer) != (std::end(_init_chain) - 1))
+        {
+            Log("Failed to initialize ", compPointer->cc_component_name(), " component due to a chain initialize call.");
+
+            std::string chainString = _init_chain[0]->cc_component_name();
+            for (size_t i = 1; i < _init_chain.size(); i++)
+            {
+                chainString += " -> " + _init_chain[i]->cc_component_name();
+            }
+            Log("\t", chainString);
+            return false;
+        }
+
+        bool localIsSuccess = compPointer->cc_initialize(_CompMap);
+
+        if (!localIsSuccess)
+        {
+            Log("Failed to initialize ", compPointer->cc_component_name(), " component.");
+        }
+
+        _init_chain.clear();
+        return localIsSuccess;
+    }
+
     void setCCLogFileBuf(std::filebuf* fileBuf)
     {
         _cc_log_TargetFileBuffer = fileBuf;
@@ -78,6 +105,12 @@ namespace cc
         Log("Clear called on component map.");
     }
     
+    std::string getUniqueName()
+    {
+        _UniqueNameIncrement++;
+        return _UniqueNameHeader + std::to_string(_UniqueNameIncrement);
+    }
+
     bool checkForComponent(const std::string name)
     {
         return _CompMap.count(name) == 1;
@@ -96,7 +129,16 @@ namespace cc
         Log("Factory registered of type: ", typeid(&factory).name());
         return factory;
     }
-    
+
+    bool insertComponent(cc_component* component)
+    {
+        if (_CompMap.count(component->cc_component_name()) == 1) {
+            return false;
+        }
+        _CompMap[component->cc_component_name()] = component;
+        return true;
+    }
+
     bool GoodRegistry(const std::string& configFile)
     {
         bool isSuccess = true;
@@ -112,7 +154,7 @@ namespace cc
         }
         return isSuccess;
     }
-    
+
     bool load(const std::string& configFile)
     {
         Log("");
