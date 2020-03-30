@@ -15,11 +15,10 @@ namespace cc
     cc_ComponentMap _CompMap;
     cc_loader* _Loader = nullptr;
     cc_FactorySet _FactorySet;
-    const std::string _UniqueNameHeader = "cc_reserved_";
     int _UniqueNameIncrement = -1;
 
     //Private functions.
-    bool loadAndLog(const std::string& fileName)
+    bool loadAndLog(const std::string& fileName, std::set<std::string>* storage)
     {
         std::string errorMsg;
         cc_ComponentMap tempMap;
@@ -38,6 +37,11 @@ namespace cc
                 Log("Overriding the previous component in ComponentMap. Not deleting from memory.");
             }
             _CompMap[entry.first] = entry.second;
+            
+            if(storage != nullptr)
+            {
+                storage->insert(entry.first);
+            }
         }
         
         Log("Loaded ", tempMap.size(), " new components into the map.");
@@ -155,17 +159,17 @@ namespace cc
         return isSuccess;
     }
 
-    bool load(const std::string& configFile)
+    bool load(const std::string& configFile, std::set<std::string>* storage)
     {
         Log("");
         Log("Loading " + configFile + ".");
         Log("---------------------------");
-        if(!GoodRegistry(configFile))
+        if (!GoodRegistry(configFile))
         {
             return false;
         }
-        
-        return loadAndLog(configFile);
+
+        return loadAndLog(configFile, storage);
     }
 
     void serialize(std::ostream& stream) {

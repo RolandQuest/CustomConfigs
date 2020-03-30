@@ -15,10 +15,11 @@ namespace cc
 {
 
     //Member variables
+    const std::string _UniqueNameHeader = "cc_reserved_";
     extern cc_ComponentMap _CompMap;
     
     //Public functions
-    bool load(const std::string& configFile);
+    bool load(const std::string& configFile, std::set<std::string>* storage = nullptr);
     bool initialize();
     bool initialize(cc_component* compPointer);
     void serialize(std::ostream& stream);
