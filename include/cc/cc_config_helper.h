@@ -94,7 +94,7 @@ namespace cc
 
 			case TemplateType::kBoolean:
 
-				if (s[0] != '0' && s[1] != '1') {
+				if (s[0] != '0' && s[0] != '1') {
 					cc::Log("TemplateTypeCheck: String does not match a boolean type (1 or 0).");
 					return false;
 				}

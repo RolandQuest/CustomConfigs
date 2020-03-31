@@ -13,13 +13,16 @@ namespace cc
 
     bool cc_core_factory::cc_contains_type(std::string type) const
     {
+        std::string lcType = type;
+        ToLower(lcType);
+
         static std::set<std::string> types = {
             cc_discrete_dist_type,
             cc_uniform_dist_type,
             cc_rng_type
         };
 
-        return types.count(type) == 1;
+        return types.count(lcType) == 1;
     }
     
     cc_component* cc_core_factory::cc_create_component(const std::string& type, const std::string& name, cc_config* config) const
@@ -27,19 +30,19 @@ namespace cc
         std::string lcType = type;
         ToLower(lcType);
         
-        if (type == cc_discrete_dist_type) {
+        if (lcType == cc_discrete_dist_type) {
             cc_discrete_distribution* ret = new cc_discrete_distribution();
             SetBasicData(ret, name, config);
             return ret;
         }
 
-        if (type == cc_uniform_dist_type) {
+        if (lcType == cc_uniform_dist_type) {
             cc_uniform_distribution* ret = new cc_uniform_distribution();
             SetBasicData(ret, name, config);
             return ret;
         }
 
-        if (type == cc_rng_type) {
+        if (lcType == cc_rng_type) {
             cc_mt19937* ret = new cc_mt19937();
             SetBasicData(ret, name, config);
             return ret;

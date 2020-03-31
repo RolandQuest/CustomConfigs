@@ -103,14 +103,20 @@ namespace cc
 
 			cc_config* config = GenerateConfig(comp);
 
+			bool foundFactory = false;
 			for (auto& fact : availableFactories) {
 
 				if (fact->cc_contains_type(type)) {
 
+					foundFactory = true;
 					cc_component* c = fact->cc_create_component(type, name, config);
 					theMap[name] = c;
 					break;
 				}
+			}
+
+			if (!foundFactory) {
+				cc::Log("Could not find a factory that supports '", type, "'. (", name, ")");
 			}
 		}
 	}
@@ -147,6 +153,8 @@ namespace cc
 
 			cc_TokenVec settingInfo;
 			std::string settingName = comp[bannerLocs[bli] + 1]->value;
+			std::transform(std::begin(settingName), std::end(settingName), std::begin(settingName), ::tolower);
+
 			delete comp[bannerLocs[bli] + 1];
 			
 			for (size_t si = bannerLocs[bli] + 2; si < eosIndex; si++) {
