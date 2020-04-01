@@ -6,16 +6,20 @@
 
 namespace cc
 {
-    
+    //! The buffer the log will send messages via clog to.
     extern std::filebuf* _cc_log_TargetFileBuffer;
+
+    //! The original clog buffer.
     extern std::streambuf* _cc_log_OriginalClogBuffer;
     
+    //! Part 3/3 - Writes a message to clog and endlines.
     template<typename First>
     void LogIterator(const First& msg)
     {
         std::clog<<msg<<std::endl;
     }
 
+    //! Part 2/3 - Writes a message to clog and endlines.
     template<typename First, typename ...Rest>
     void LogIterator(const First& msg, const Rest& ...params)
     {
@@ -23,6 +27,7 @@ namespace cc
         LogIterator(params...);
     }
     
+    //! Part 1/3 - Writes a message to clog and endlines.
     template<typename ...Rest>
     void Log(Rest... params)
     {

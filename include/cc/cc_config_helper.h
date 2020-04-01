@@ -24,8 +24,8 @@ namespace cc
 	};
 
 	/*
-	All functions defined in the header file must be marked as inline or they'll be wrapped up
-	into every components .obj file and you'll get linking issues.
+		All functions defined in the header file must be marked as inline or they'll be wrapped up
+		into every components .obj file and you'll get linking issues.
 	*/
 
 	//! Checks if string represents a double value.
@@ -310,11 +310,11 @@ namespace cc
 		return true;
 	}
 	
-	//Returns the kWord elements of the setting as a 2d vector.
 	/**
-	Each line of the configuration will be a vector for the container (delimited by line breaks).
-	If a line is empty, an emptry vector will NOT be inserted.
+		Each line of the configuration will be a vector for the container (delimited by line breaks).
+		If a line is empty, an emptry vector will NOT be inserted.
 	*/
+	//! Returns the kWord elements of the setting as a 2d vector.
 	template<typename T>
 	bool As2dVector(cc_config* config, const std::string& setName, std::vector< std::vector<T> >& container, TemplateType type = TemplateType::kString) {
 
@@ -358,11 +358,12 @@ namespace cc
 		return true;
 	}
 
-	//Returns the kWord elements of the setting as a 2d vector of cc_component pointers.
+	
 	/**
-	Each line of the configuration will be a vector for the container (delimited by line breaks).
-	If a line is empty, an emptry vector will NOT be inserted.
+		Each line of the configuration will be a vector for the container (delimited by line breaks).
+		If a line is empty, an emptry vector will NOT be inserted.
 	*/
+	//! Returns the kWord elements of the setting as a 2d vector of cc_component pointers.
 	template<typename CompType>
 	bool As2dVector(cc_config* config, const std::string& setName, std::vector< std::vector<CompType*> >& container, cc_kComponentMap& comps) {
 
@@ -393,11 +394,12 @@ namespace cc
 		return true;
 	}
 
-	//! Returns a map object of the elements.
+	
 	/**
-	The kWords provided should be in key, value order.
-	As long as the setting is set up that way, std::ws is ignored.
+		The kWords provided should be in key, value order.
+		As long as the setting is set up that way, std::ws is ignored.
 	*/
+	//! Returns a map object of the elements.
 	template<typename key, typename val>
 	bool AsSingleMap(cc_config* config, const std::string& setName, std::map<key, val>& container, TemplateType keyType, TemplateType valueType) {
 
@@ -442,12 +444,12 @@ namespace cc
 		}
 		return true;
 	}
-
-	//! Returns a map of vector objects.
+		
 	/**
-	Each line of the configuration will be a key, value pair.
-	The code expects a key at the start of every line.
+		Each line of the configuration will be a key, value pair.
+		The code expects a key at the start of every line.
 	*/
+	//! Returns a map of vector objects.
 	template<typename key, typename val>
 	bool AsVectorMap(cc_config* config, const std::string& setName, std::map< key, std::vector<val> >& container, TemplateType keyType, TemplateType valueType) {
 
@@ -500,15 +502,6 @@ namespace cc
 	}
 
 }
-
-
-
-
-
-
-
-
-
 
 
 #endif

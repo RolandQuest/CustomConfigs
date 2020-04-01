@@ -11,11 +11,12 @@
 namespace cc
 {
 	/**
-	The configuration of all cc_component types. This is the components interface with the configuration loaded up by the set cc_loader.
-	This is a temporary solution to get started. In the future, this class should be abstracted and inherited from.
-	I have not figured out how to abstract the concept of configuration to the point you can create any type of configuration yet.
-	This base class should also know nothing of cc_tokens.
-	C++ does not support virtual template member functions, so that's out.
+		The configuration of all cc_component types. This is the components interface with the configuration loaded up by the set cc_loader.
+		This is a temporary solution to get started. In the future, this class should be abstracted and inherited from.
+		I have not figured out how to abstract the concept of configuration to the point you can create any type of configuration yet.
+		This base class should also know nothing of cc_tokens.
+
+		C++ does not support virtual template member functions, so that's out.
 	*/
 	class cc_config
 	{
@@ -40,16 +41,16 @@ namespace cc
 			//! Returns a token vector for component to consume how it sees fit.
 			bool TokenVector(const std::string& name, cc_TokenVec& container) const;
 
-			//! Meta data in string form for printing out messages.
+			//! Meta data in string form for printing out comments on serializing.
 			std::vector<std::string> MetaData;
 
 		private:
 
-			//! (config name -> config) Holds the configuration data.
 			/**
-			Need to determine who owns the cc_token pointers.
-			Some entity has to know when they can be deleted.
+				Need to determine who owns the cc_token pointers.
+				Some entity has to know when they can be deleted.
 			*/
+			//! (config name -> config) Holds the configuration data.
 			std::map<std::string, cc_TokenVec> _configData;
 	};
 

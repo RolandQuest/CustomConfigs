@@ -6,19 +6,18 @@
 namespace cc
 {
 
-    bool cc_base_distribution::cc_initialize(cc_kComponentMap& availableComponents)
-    {
-        cc_component::cc_initialize(availableComponents);
+	bool cc_base_distribution::cc_initialize(cc_kComponentMap& availableComponents) {
 
-        _cc_is_initialized &= cc::AsSingle(_cc_config, "cc_rng", _Rando, availableComponents);
+		cc_component::cc_initialize(availableComponents);
 
-        return _cc_is_initialized;
-    }
+		_cc_is_initialized &= cc::AsSingle(_cc_config, "cc_rng", _Rando, availableComponents);
 
-    void cc_base_distribution::SetRand(cc_mt19937* rando)
-    {
-        _Rando = rando;
-    }
+		return _cc_is_initialized;
+	}
+
+	void cc_base_distribution::SetRand(cc_mt19937* rando) {
+		_Rando = rando;
+	}
 
 }
 

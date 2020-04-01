@@ -12,9 +12,7 @@ namespace cc
 	}
 
 	void cc_factory::ToLower(std::string& lcType) const {
-
 		std::transform(std::begin(lcType), std::end(lcType), std::begin(lcType), ::tolower);
 	}
-
 
 }

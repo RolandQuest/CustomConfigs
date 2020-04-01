@@ -7,15 +7,29 @@
 
 namespace cc
 {
+	//! Settings for the cc_core_loader.
 	class cc_core_loader_settings
 	{
 		public:
 
+			//! Constructor
 			cc_core_loader_settings() = default;
+
+			//! Destructor
 			~cc_core_loader_settings() = default;
 
+
+			/**
+				Not implemented. Not 1 line of code.
+				Well that's not true. It returns true always.
+				That's gotta count for something.
+			*/
+			//! Validates that the settings won't cause easily avoidable issues.
 			bool Validate();
+
+			//! Returns the string reference for the given token type.
 			std::string& operator[](CoreToken type);
+
 
 			std::string ComponentBanner = "#";
 			std::string SettingBanner = "&";

@@ -18,6 +18,7 @@ namespace cc
     int _UniqueNameIncrement = -1;
 
     //Private functions.
+
     bool loadAndLog(const std::string& fileName, std::set<std::string>* storage)
     {
         std::string errorMsg;
@@ -176,9 +177,15 @@ namespace cc
 
         for (auto& entry : _CompMap) {
 
-            _Loader->cc_loader_serialize(stream, entry.second);
-            stream.flush();
+            serialize(stream, entry.second);
         }
     }
+
+    void serialize(std::ostream& stream, cc_component* compPointer) {
+
+        _Loader->cc_loader_serialize(stream, compPointer);
+        stream.flush();
+    }
+
 }
 

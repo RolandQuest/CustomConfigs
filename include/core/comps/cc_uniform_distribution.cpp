@@ -7,41 +7,38 @@
 
 namespace cc
 {
-    cc_uniform_distribution::cc_uniform_distribution(int size) {
+	cc_uniform_distribution::cc_uniform_distribution(int size) {
 
-        _Size = size;
-        std::uniform_int_distribution<size_t> temp(0, _Size - 1);
-        _Dist = temp;
-    }
+		_Size = size;
+		std::uniform_int_distribution<size_t> temp(0, _Size - 1);
+		_Dist = temp;
+	}
 
-    bool cc_uniform_distribution::cc_initialize(cc_kComponentMap& availableComponents) {
+	bool cc_uniform_distribution::cc_initialize(cc_kComponentMap& availableComponents) {
 
-        cc_base_distribution::cc_initialize(availableComponents);
+		cc_base_distribution::cc_initialize(availableComponents);
 
-        _cc_is_initialized &= AsSingle(_cc_config, "size", _Size, TemplateType::kUnsigned);
-        std::uniform_int_distribution<size_t> temp(0, _Size - 1);
-        _Dist = temp;
+		_cc_is_initialized &= AsSingle(_cc_config, "size", _Size, TemplateType::kUnsigned);
+		std::uniform_int_distribution<size_t> temp(0, _Size - 1);
+		_Dist = temp;
 
-        return _cc_is_initialized;
-    }
+		return _cc_is_initialized;
+	}
 
-    std::string cc_uniform_distribution::cc_type() const {
-        return cc_uniform_dist_type;
-    }
+	std::string cc_uniform_distribution::cc_component_type() const {
+		return cc_uniform_dist_type;
+	}
 
-    size_t cc_uniform_distribution::Next()
-    {
-        return _Dist(*_Rando);
-    }
+	size_t cc_uniform_distribution::Next() {
+		return _Dist(*_Rando);
+	}
 
-    size_t cc_uniform_distribution::Size()
-    {
-        return _Size;
-    }
+	size_t cc_uniform_distribution::Size() {
+		return _Size;
+	}
 
-    double cc_uniform_distribution::GetWeightAtPosition(size_t position)
-    {
-        return 1;
-    }
+	double cc_uniform_distribution::GetWeightAtPosition(size_t position) {
+		return 1;
+	}
 
 }

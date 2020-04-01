@@ -11,20 +11,33 @@
 
 namespace cc
 {
+    //! A discrete distribution class.
     class cc_discrete_distribution : public cc_base_distribution
     {
-
         public:
 
+            //! Constructor
             cc_discrete_distribution() = default;
+
+            //! Destructor
             virtual ~cc_discrete_distribution() = default;
 
-            bool cc_initialize(cc_kComponentMap& availableComponents) override;
-            std::string cc_type() const;
 
-            virtual size_t Next() override;
-            virtual size_t Size() override;
-            virtual double GetWeightAtPosition(size_t position) override;
+            //!Initializes the component and linking names in the configuration with actual objects.
+            bool cc_initialize(cc::cc_kComponentMap& availableComponents) override;
+
+            //!Returns the type of the component.
+            std::string cc_component_type() const;
+
+
+            //! Returns a number from the distribution.
+            size_t Next() override;
+
+            //! Returns the size of the distribution.
+            size_t Size() override;
+
+            //! Returns the weight at a given position.
+            double GetWeightAtPosition(size_t position) override;
 
         protected:
 

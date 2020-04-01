@@ -16,16 +16,25 @@
 
 namespace cc
 {
+    //! A provided cc loader courtesy cc portal. =)
     class cc_core_loader : public cc_loader
     {
         public:
             
+            //! Constructor
             cc_core_loader() = default;
+
+            //! Destructor
             virtual ~cc_core_loader() = default;
             
+
+            //! Loads a configuration files components and stores them into the provided map.
             bool cc_loader_load(const std::string& configFile, cc_ComponentMap& theMap, cc_kFactorySet& availableFactories) override;
+
+            //! Serializes a component into the provided stream.
             void cc_loader_serialize(std::ostream& stream, cc_component* component) override;
 
+            //! Settings for changing how the loader views tokens.
 			cc_core_loader_settings settings;
 
         private:
@@ -37,8 +46,6 @@ namespace cc
             void ClearComments(cc_TokenVec& allTokens);
             bool LoadTokens(const std::string& configFile, cc_TokenVec& allTokens);
             void DelimitWord(const std::string& word, cc_TokenVec& allTokens);
-
-            int _UniqueNameIncrement = -1;
     };
 
 }

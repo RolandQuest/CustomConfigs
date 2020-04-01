@@ -2,11 +2,21 @@
 
 namespace cc
 {
+	/*
+
+	ctors/dtors
+
+	*/
 
 	cc_component::~cc_component() {
-
 		delete _cc_config;
 	}
+
+	/*
+
+	cc component
+
+	*/
 
 	void cc_component::cc_set_name(std::string name) {
 
@@ -22,22 +32,18 @@ namespace cc
 	}
 
 	bool cc_component::cc_is_initialized() const {
-
 		return _cc_is_initialized;
 	}
 
 	const std::string& cc_component::cc_component_name() const {
-
 		return _cc_name;
 	}
 
 	std::string cc_component::cc_component_type() const {
-
 		return "cc_component";
 	}
 
 	const cc_config* const cc_component::cc_component_config() const {
-
 		return _cc_config;
 	}
 

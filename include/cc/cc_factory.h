@@ -16,10 +16,7 @@ namespace cc
     //! For ease of use.
     using cc_kFactorySet = const std::set<cc::cc_factory*>;
 
-    /**
-    Base class for the cc portal factory types used.
-    Could perhaps be simplified a tad, but at least one of cc_available_types and cc_contains_type must be present.
-    */
+    //! Base class for the cc portal factory types used.
     class cc_factory
     {
         public:

@@ -40,12 +40,9 @@ namespace cc
 		return ret;
 	}
 
-	bool cc_config::KeyExists(const std::string& name) const
-	{
+	bool cc_config::KeyExists(const std::string& name) const {
 		return _configData.find(name) != std::end(_configData);
 	}
-
-	
 
 }
 
