@@ -19,6 +19,9 @@ namespace cc
             //! Constructor
             cc_discrete_distribution() = default;
 
+            //! Constructor
+            cc_discrete_distribution(const std::vector<double>& weights);
+
             //! Destructor
             virtual ~cc_discrete_distribution() = default;
 

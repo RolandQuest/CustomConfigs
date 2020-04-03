@@ -5,6 +5,14 @@
 
 namespace cc
 {
+	cc_discrete_distribution::cc_discrete_distribution(const std::vector<double>& weights) {
+
+		_Weights = weights;
+		std::discrete_distribution<size_t> clone(std::begin(_Weights), std::end(_Weights));
+		_Dist = clone;
+	}
+
+
 	bool cc_discrete_distribution::cc_initialize(cc_kComponentMap& availableComponents) {
 
 		cc_component::cc_initialize(availableComponents);
