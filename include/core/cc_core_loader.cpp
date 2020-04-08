@@ -88,6 +88,11 @@ namespace cc
 				type = comp[0]->value,
 				name = comp[1]->value;
 
+			if (name == settings.UniqueNameSignal) {
+				name = getUniqueName();
+				comp[1]->value = name;
+			}
+
 			if (theMap.count(name) == 1) {
 				cc::Log("File has duplicate component names. Ignoring second.");
 
@@ -98,7 +103,10 @@ namespace cc
 			}
 
 			delete comp[0];
-			delete comp[1];
+
+			//Cannot delete the name because the upper context may use it.
+			//delete comp[1];
+
 			comp.erase(std::begin(comp), std::begin(comp) + 2);
 
 			cc_config* config = GenerateConfig(comp);

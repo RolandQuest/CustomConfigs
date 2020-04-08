@@ -17,6 +17,8 @@ namespace cc
 
 		cc_component::cc_initialize(availableComponents);
 
+		_cc_is_initialized &= cc::AsSingle(_cc_config, "cc_rng", _Rando, availableComponents);
+
 		_cc_is_initialized &= cc::AsVector(_cc_config, "weights", _Weights, TemplateType::kUnsignedDouble);
 		std::discrete_distribution<size_t> clone(std::begin(_Weights), std::end(_Weights));
 		_Dist = clone;
