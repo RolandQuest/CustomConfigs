@@ -71,7 +71,7 @@ namespace cc
 			case TemplateType::kDouble:
 
 				if (!IsDouble(s)) {
-					cc::Log("TemplateTypeCheck: String does not match a double type.");
+					cc::Log("TemplateTypeCheck: String does not match a double type: '", s, "'");
 					return false;
 				}
 				return true;
@@ -79,7 +79,7 @@ namespace cc
 			case TemplateType::kInt:
 				
 				if (!IsInteger(s)) {
-					cc::Log("TemplateTypeCheck: String does not match an integer type.");
+					cc::Log("TemplateTypeCheck: String does not match an integer type: '", s, "'");
 					return false;
 				}
 				return true;
@@ -87,7 +87,7 @@ namespace cc
 			case TemplateType::kUnsigned:
 				
 				if (!IsUnsignedInteger(s)) {
-					cc::Log("TemplateTypeCheck: String does not match an unsigned integer type.");
+					cc::Log("TemplateTypeCheck: String does not match an unsigned integer type: '", s, "'");
 					return false;
 				}
 				return true;
@@ -95,7 +95,7 @@ namespace cc
 			case TemplateType::kBoolean:
 
 				if (s[0] != '0' && s[0] != '1') {
-					cc::Log("TemplateTypeCheck: String does not match a boolean type (1 or 0).");
+					cc::Log("TemplateTypeCheck: String does not match a boolean type (1 or 0): '", s, "'");
 					return false;
 				}
 				return true;
@@ -103,7 +103,7 @@ namespace cc
 			case TemplateType::kUnsignedDouble:
 
 				if (!IsDouble(s) || s[0] == '-') {
-					cc::Log("TemplateTypeCheck: String does not match a unsigned double type.");
+					cc::Log("TemplateTypeCheck: String does not match a unsigned double type: '", s, "'");
 					return false;
 				}
 				return true;
