@@ -290,6 +290,7 @@ namespace cc
 				eraseMe = true;
 				if (allTokens[i]->type == CoreToken::kEndLine) {
 					inLineComment = false;
+					eraseMe = false;
 				}
 			}
 			else if (inBlockComment) {
