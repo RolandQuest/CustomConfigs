@@ -11,43 +11,54 @@
 
 namespace cc
 {
-    //! A discrete distribution class.
-    class cc_discrete_distribution : public cc_base_distribution
-    {
-        public:
+  //! A discrete distribution class.
+  class cc_discrete_distribution : public cc_base_distribution
+  {
 
-            //! Constructor
-            cc_discrete_distribution() = default;
+  protected:
 
-            //! Constructor
-            cc_discrete_distribution(const std::vector<double>& weights);
+    bool _replacement = true;
 
-            //! Destructor
-            virtual ~cc_discrete_distribution() = default;
+    std::vector<double> _Weights;
+    std::vector<double> _CurrentWeights;
+
+    std::discrete_distribution<size_t> _Dist;
+
+  public:
+
+    //! Constructor
+    cc_discrete_distribution() = default;
+
+    //! Constructor
+    cc_discrete_distribution( const std::vector<double>& weights );
+
+    //! Destructor
+    virtual ~cc_discrete_distribution() = default;
 
 
-            //!Initializes the component and linking names in the configuration with actual objects.
-            bool cc_initialize(cc::cc_kComponentMap& availableComponents) override;
+    //!Initializes the component and linking names in the configuration with actual objects.
+    bool cc_initialize( cc::cc_kComponentMap& availableComponents ) override;
 
-            //!Returns the type of the component.
-            std::string cc_component_type() const;
+    //!Returns the type of the component.
+    std::string cc_component_type() const;
 
 
-            //! Returns a number from the distribution.
-            size_t Next() override;
+    //! Returns a number from the distribution.
+    size_t Next() override;
 
-            //! Returns the size of the distribution.
-            size_t Size() override;
+    //! Returns the size of the distribution.
+    size_t Size() override;
 
-            //! Returns the weight at a given position.
-            double GetWeightAtPosition(size_t position) override;
+    //! Returns the weight at a given position.
+    double GetWeightAtPosition( size_t position ) override;
 
-        protected:
+    //!
+    double GetCurrentWeightAtPosition( size_t position );
 
-            std::vector<double> _Weights;
-            std::discrete_distribution<size_t> _Dist;
+    //! 
+    void Reset();
 
-    };
+  };
 
 }
 

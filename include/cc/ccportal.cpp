@@ -72,7 +72,7 @@ namespace cc
         _init_chain.push_back(compPointer);
         if (std::find(std::begin(_init_chain), std::end(_init_chain), compPointer) != (std::end(_init_chain) - 1))
         {
-            Log("Failed to initialize ", compPointer->cc_component_name(), " component due to a chain initialize call.");
+            Log("Failed to initialize '", compPointer->cc_component_name(), "' component of type '", compPointer->cc_component_type(),"' due to a chain initialize call.");
 
             std::string chainString = _init_chain[0]->cc_component_name();
             for (size_t i = 1; i < _init_chain.size(); i++)
@@ -87,7 +87,7 @@ namespace cc
 
         if (!localIsSuccess)
         {
-            Log("Failed to initialize ", compPointer->cc_component_name(), " component.");
+            Log("Failed to initialize '", compPointer->cc_component_name(), "' component of type '",compPointer->cc_component_type(),"'.");
         }
 
         _init_chain.clear();

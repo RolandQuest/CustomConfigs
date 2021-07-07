@@ -5,40 +5,61 @@
 
 namespace cc
 {
-	cc_discrete_distribution::cc_discrete_distribution(const std::vector<double>& weights) {
+  cc_discrete_distribution::cc_discrete_distribution( const std::vector<double>& weights ) {
 
-		_Weights = weights;
-		std::discrete_distribution<size_t> clone(std::begin(_Weights), std::end(_Weights));
-		_Dist = clone;
-	}
+    _Weights = weights;
+    std::discrete_distribution<size_t> clone( std::begin( _Weights ), std::end( _Weights ) );
+    _Dist = clone;
+  }
 
 
-	bool cc_discrete_distribution::cc_initialize(cc_kComponentMap& availableComponents) {
+  bool cc_discrete_distribution::cc_initialize( cc_kComponentMap& availableComponents ) {
 
-		cc_component::cc_initialize(availableComponents);
+    cc_component::cc_initialize( availableComponents );
 
-		_cc_is_initialized &= cc::AsSingle(_cc_config, "cc_rng", _Rando, availableComponents);
+    _cc_is_initialized &= cc::AsSingle( _cc_config, "cc_rng", _Rando, availableComponents );
+    _cc_is_initialized &= cc::AsVector( _cc_config, "weights", _Weights, TemplateType::kUnsignedDouble );
+    cc::AsSingle( _cc_config, "replacement", _replacement, TemplateType::kBoolean );
 
-		_cc_is_initialized &= cc::AsVector(_cc_config, "weights", _Weights, TemplateType::kUnsignedDouble);
-		std::discrete_distribution<size_t> clone(std::begin(_Weights), std::end(_Weights));
-		_Dist = clone;
+    _CurrentWeights = _Weights;
+    std::discrete_distribution<size_t> clone( std::begin( _CurrentWeights ), std::end( _CurrentWeights ) );
+    _Dist = clone;
 
-		return _cc_is_initialized;
-	}
+    return _cc_is_initialized;
+  }
 
-	std::string cc_discrete_distribution::cc_component_type() const {
-		return cc_discrete_dist_type;
-	}
+  std::string cc_discrete_distribution::cc_component_type() const {
+    return cc_discrete_dist_type;
+  }
 
-	size_t cc_discrete_distribution::Next() {
-		return _Dist(*_Rando);
-	}
+  size_t cc_discrete_distribution::Next() {
 
-	size_t cc_discrete_distribution::Size() {
-		return _Weights.size();
-	}
+    size_t retIndex = _Dist( *_Rando );
+    if ( !_replacement ) {
+      _CurrentWeights[retIndex] = 0.0;
+      _Dist = std::discrete_distribution<size_t>( std::begin( _CurrentWeights ), std::end( _CurrentWeights ) );
+    }
 
-	double cc_discrete_distribution::GetWeightAtPosition(size_t position) {
-		return _Weights[position];
-	}
+    return retIndex;
+  }
+
+  size_t cc_discrete_distribution::Size() {
+    return _Weights.size();
+  }
+
+  double cc_discrete_distribution::GetWeightAtPosition( size_t position ) {
+    return _Weights[position];
+  }
+
+  double cc_discrete_distribution::GetCurrentWeightAtPosition( size_t position ) {
+    return _CurrentWeights[position];
+  }
+
+  void cc_discrete_distribution::Reset() {
+    if ( !_replacement ) {
+      _CurrentWeights = _Weights;
+      _Dist = std::discrete_distribution<size_t>( std::begin( _CurrentWeights ), std::end( _CurrentWeights ) );
+    }
+  }
+
 }
