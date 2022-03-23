@@ -6,10 +6,10 @@
 #include <set>
 #include <ostream>
 
-#include "cc/cclog.h"
-#include "cc/cc_factory.h"
-#include "cc/cc_loader.h"
-#include "cc/cc_component.h"
+#include "cclog.h"
+#include "cc_factory.h"
+#include "cc_loader.h"
+#include "cc_component.h"
 
 namespace cc
 {

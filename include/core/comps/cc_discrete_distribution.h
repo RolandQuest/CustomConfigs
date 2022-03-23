@@ -6,8 +6,8 @@
 #include <vector>
 #include <map>
 
-#include "cc/cc_component.h"
-#include "core/comps/cc_base_distribution.h"
+#include "../../cc/cc_component.h"
+#include "cc_base_distribution.h"
 
 namespace cc
 {
@@ -40,7 +40,7 @@ namespace cc
     bool cc_initialize( cc::cc_kComponentMap& availableComponents ) override;
 
     //!Returns the type of the component.
-    std::string cc_component_type() const;
+    std::string cc_component_type() const override;
 
 
     //! Returns a number from the distribution.

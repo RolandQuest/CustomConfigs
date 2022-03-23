@@ -1,6 +1,6 @@
-#include "core/cc_core_loader_settings.h"
+#include "cc_core_loader_settings.h"
 
-#include "cc/cclog.h"
+#include "../cc/cclog.h"
 
 namespace cc
 {

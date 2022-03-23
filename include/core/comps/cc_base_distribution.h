@@ -5,8 +5,8 @@
 #include <random>
 #include <map>
 
-#include "cc/cc_component.h"
-#include "core/comps/cc_mt19937.h"
+#include "../../cc/cc_component.h"
+#include "cc_mt19937.h"
 
 namespace cc
 {

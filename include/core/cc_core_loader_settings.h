@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "cc/cc_token.h"
+#include "../cc/cc_token.h"
 
 namespace cc
 {

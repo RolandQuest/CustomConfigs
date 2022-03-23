@@ -5,9 +5,9 @@
 #include <map>
 #include <string>
 
-#include "cc/cc_factory.h"
-#include "cc/cc_config.h"
-#include "cc/cc_component.h"
+#include "../../cc/cc_factory.h"
+#include "../../cc/cc_config.h"
+#include "../../cc/cc_component.h"
 
 namespace cc
 {

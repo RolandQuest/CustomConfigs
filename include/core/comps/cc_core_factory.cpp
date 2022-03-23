@@ -1,12 +1,12 @@
-#include "core/comps/cc_core_factory.h"
+#include "cc_core_factory.h"
 
 #include <set>
 
-#include "cc/cclog.h"
-#include "core/comps/cc_core_types.h"
-#include "core/comps/cc_discrete_distribution.h"
-#include "core/comps/cc_uniform_distribution.h"
-#include "core/comps/cc_mt19937.h"
+#include "../../cc/cclog.h"
+#include "cc_core_types.h"
+#include "cc_discrete_distribution.h"
+#include "cc_uniform_distribution.h"
+#include "cc_mt19937.h"
 
 namespace cc
 {

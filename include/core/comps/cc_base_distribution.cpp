@@ -1,7 +1,7 @@
-#include "core/comps/cc_base_distribution.h"
+#include "cc_base_distribution.h"
 
-#include "cc/cclog.h"
-#include "cc/cc_config_helper.h"
+#include "../../cc/cclog.h"
+#include "../../cc/cc_config_helper.h"
 
 namespace cc
 {

@@ -1,10 +1,10 @@
-#include "core/cc_core_loader.h"
+#include "cc_core_loader.h"
 
 #include <sstream>
 #include <algorithm>
 
-#include "cc/ccportal.h"
-#include "cc/cclog.h"
+#include "../cc/ccportal.h"
+#include "../cc/cclog.h"
 
 namespace cc
 {

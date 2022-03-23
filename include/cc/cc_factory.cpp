@@ -1,4 +1,4 @@
-#include "cc/cc_factory.h"
+#include "cc_factory.h"
 
 #include <algorithm>
 

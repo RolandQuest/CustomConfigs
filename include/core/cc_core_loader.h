@@ -7,12 +7,12 @@
 #include <ostream>
 #include <set>
 
-#include "cc/cc_component.h"
-#include "cc/cc_factory.h"
-#include "cc/cc_loader.h"
-#include "cc/cc_token.h"
-#include "cc/cc_config.h"
-#include "core/cc_core_loader_settings.h"
+#include "../cc/cc_component.h"
+#include "../cc/cc_factory.h"
+#include "../cc/cc_loader.h"
+#include "../cc/cc_token.h"
+#include "../cc/cc_config.h"
+#include "cc_core_loader_settings.h"
 
 namespace cc
 {

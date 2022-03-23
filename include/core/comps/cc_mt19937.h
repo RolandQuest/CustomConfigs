@@ -5,7 +5,7 @@
 #include <map>
 #include <random>
 
-#include "cc/cc_component.h"
+#include "../../cc/cc_component.h"
 
 namespace cc
 {
@@ -25,7 +25,7 @@ namespace cc
             bool cc_initialize(cc::cc_kComponentMap& availableComponents) override;
 
             //!Returns the type of the component.
-            std::string cc_component_type() const;
+            std::string cc_component_type() const override;
 
             //! Returns the configuration of the component.
             const cc_config* const cc_component_config() const override;

@@ -1,4 +1,4 @@
-#include "cc/cclog.h"
+#include "cclog.h"
 
 namespace cc
 {

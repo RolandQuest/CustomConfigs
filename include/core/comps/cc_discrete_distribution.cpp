@@ -1,7 +1,7 @@
-#include "core/comps/cc_discrete_distribution.h"
+#include "cc_discrete_distribution.h"
 
-#include "cc/cc_config_helper.h"
-#include "core/comps/cc_core_types.h"
+#include "../../cc/cc_config_helper.h"
+#include "cc_core_types.h"
 
 namespace cc
 {

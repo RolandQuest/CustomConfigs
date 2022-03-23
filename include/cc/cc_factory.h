@@ -4,8 +4,8 @@
 #include <set>
 #include <string>
 
-#include "cc/cc_component.h"
-#include "cc/cc_config.h"
+#include "cc_component.h"
+#include "cc_config.h"
 
 namespace cc
 {

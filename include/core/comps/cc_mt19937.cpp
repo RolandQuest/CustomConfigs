@@ -1,9 +1,9 @@
-#include "core/comps/cc_mt19937.h"
+#include "cc_mt19937.h"
 
 #include <time.h>
 
-#include "cc/cc_config_helper.h"
-#include "core/comps/cc_core_types.h"
+#include "../../cc/cc_config_helper.h"
+#include "cc_core_types.h"
 
 namespace cc
 {

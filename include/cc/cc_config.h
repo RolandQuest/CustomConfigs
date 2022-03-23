@@ -6,7 +6,7 @@
 #include <vector>
 #include <map>
 
-#include "cc/cc_token.h"
+#include "cc_token.h"
 
 namespace cc
 {

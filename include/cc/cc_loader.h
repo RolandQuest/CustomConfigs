@@ -6,8 +6,8 @@
 #include <map>
 #include <set>
 
-#include "cc/cc_factory.h"
-#include "cc/cc_component.h"
+#include "cc_factory.h"
+#include "cc_component.h"
 
 namespace cc
 {

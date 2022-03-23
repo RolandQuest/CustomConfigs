@@ -1,9 +1,9 @@
-#include "core/comps/cc_uniform_distribution.h"
+#include "cc_uniform_distribution.h"
 
 #include <vector>
 
-#include "core/comps/cc_core_types.h"
-#include "cc/cc_config_helper.h"
+#include "cc_core_types.h"
+#include "../../cc/cc_config_helper.h"
 
 namespace cc
 {

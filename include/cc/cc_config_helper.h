@@ -1,9 +1,9 @@
 #ifndef CC_CONFIG_HELPER_H
 #define CC_CONFIG_HELPER_H
 
-#include "cc/cclog.h"
-#include "cc/cc_config.h"
-#include "cc/cc_component.h"
+#include "cclog.h"
+#include "cc_config.h"
+#include "cc_component.h"
 
 #include <vector>
 #include <set>
@@ -107,6 +107,12 @@ namespace cc
 					return false;
 				}
 				return true;
+				
+			case TemplateType::kString:
+				return true;
+				
+			default:
+				return false;
 		}
 
 		return true;

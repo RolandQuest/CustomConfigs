@@ -1,12 +1,12 @@
-#include "cc/ccportal.h"
+#include "ccportal.h"
 
 #include <vector>
 #include <fstream>
 #include <typeinfo>
 
-#include "cc/cc_component.h"
-#include "cc/cc_loader.h"
-#include "cc/cc_factory.h"
+#include "cc_component.h"
+#include "cc_loader.h"
+#include "cc_factory.h"
 
 namespace cc
 {

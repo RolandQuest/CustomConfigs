@@ -1,4 +1,4 @@
-#include "cc/cc_component.h"
+#include "cc_component.h"
 
 namespace cc
 {
