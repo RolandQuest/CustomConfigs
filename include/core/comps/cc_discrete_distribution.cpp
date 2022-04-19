@@ -19,8 +19,8 @@ namespace cc
 
     _cc_is_initialized &= cc::AsSingle( _cc_config, "cc_rng", _Rando, availableComponents );
     _cc_is_initialized &= cc::AsVector( _cc_config, "weights", _Weights, TemplateType::kUnsignedDouble );
-    cc::AsSingle( _cc_config, "replacement", _replacement, TemplateType::kBoolean );
-
+    cc::AsSingle( _cc_config, "replacement", _replacement, TemplateType::kUnsigned );
+    
     _CurrentWeights = _Weights;
     std::discrete_distribution<size_t> clone( std::begin( _CurrentWeights ), std::end( _CurrentWeights ) );
     _Dist = clone;
@@ -35,11 +35,16 @@ namespace cc
   size_t cc_discrete_distribution::Next() {
 
     size_t retIndex = _Dist( *_Rando );
-    if ( !_replacement ) {
-      _CurrentWeights[retIndex] = 0.0;
-      _Dist = std::discrete_distribution<size_t>( std::begin( _CurrentWeights ), std::end( _CurrentWeights ) );
+    switch(_replacement){
+      case 1:
+        _CurrentWeights[retIndex] -= 1.0;
+        _Dist = std::discrete_distribution<size_t>( std::begin( _CurrentWeights ), std::end( _CurrentWeights ) );
+        break;
+      case 2:
+        _CurrentWeights[retIndex] = 0.0;
+        _Dist = std::discrete_distribution<size_t>( std::begin( _CurrentWeights ), std::end( _CurrentWeights ) );
+        break;
     }
-
     return retIndex;
   }
 
@@ -56,10 +61,12 @@ namespace cc
   }
 
   void cc_discrete_distribution::Reset() {
-    if ( !_replacement ) {
-      _CurrentWeights = _Weights;
-      _Dist = std::discrete_distribution<size_t>( std::begin( _CurrentWeights ), std::end( _CurrentWeights ) );
-    }
+    _CurrentWeights = _Weights;
+    _Dist = std::discrete_distribution<size_t>( std::begin( _CurrentWeights ), std::end( _CurrentWeights ) );
   }
-
+  
+  void cc_discrete_distribution::SetReplacementStyle( int repl ) {
+    _replacement = repl;
+  }
+  
 }
